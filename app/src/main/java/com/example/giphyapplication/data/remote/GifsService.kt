@@ -5,7 +5,6 @@ import com.example.giphyapplication.data.entity.GifEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-
 interface GifsService {
     @GET("gifs/trending")
     suspend fun getTrendingGifs(
