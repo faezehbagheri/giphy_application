@@ -26,13 +26,13 @@ abstract class NetworkResult<TResult, TRemote> {
             .flowOn(Dispatchers.IO)
 }
 
-
 @ExperimentalCoroutinesApi
-fun networkResult(
-    callRemote: suspend () -> Unit
-): Flow<GetResult<Unit>> = object : NetworkResult<Unit, Unit>() {
-    override suspend fun callRemote(): Unit = callRemote()
+fun <TResult, TRemote> networkResult(
+    callRemote: suspend () -> TRemote,
+    mapRemoteToResult: (data: TRemote) -> TResult,
+): Flow<GetResult<TResult>> = object : NetworkResult<TResult, TRemote>() {
+    override suspend fun callRemote(): TRemote = callRemote()
 
-    override fun mapRemoteToResult(data: Unit): Unit = Unit
+    override fun mapRemoteToResult(data: TRemote): TResult = mapRemoteToResult(data)
 }.asFlow()
 

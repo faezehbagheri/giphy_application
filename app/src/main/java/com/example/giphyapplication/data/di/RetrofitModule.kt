@@ -1,7 +1,7 @@
 package com.example.giphyapplication.data.di
 
 import com.example.giphyapplication.BuildConfig
-import com.example.giphyapplication.data.remote.GifService
+import com.example.giphyapplication.data.remote.GifsService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +24,7 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideGifService(retrofit: Retrofit): GifService {
-        return retrofit.create(GifService::class.java)
+    fun provideGifService(retrofit: Retrofit): GifsService {
+        return retrofit.create(GifsService::class.java)
     }
 }
