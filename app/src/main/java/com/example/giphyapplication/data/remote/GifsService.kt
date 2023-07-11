@@ -1,7 +1,7 @@
 package com.example.giphyapplication.data.remote
 
 import com.example.giphyapplication.BuildConfig
-import com.example.giphyapplication.data.entity.GifEntity
+import com.example.giphyapplication.data.entity.GifResponseEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,6 +14,6 @@ interface GifsService {
         offset: Int,
         @Query("api_key")
         apiKey: String = BuildConfig.API_KEY
-    ): List<GifEntity>
+    ): GifResponseEntity
 
 }

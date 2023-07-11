@@ -3,9 +3,9 @@ package com.example.giphyapplication.data.repository
 import com.example.giphyapplication.data.entity.*
 import com.example.giphyapplication.domain.model.*
 
-fun GifEntity.toDomain(): Gif =
-    Gif(
-        data.map { it.toDomain() }, meta.toDomain(), pagination.toDomain()
+fun GifResponseEntity.toDomain(): GifResponse =
+    GifResponse(
+        gifs.map { it.toDomain() }, meta.toDomain(), pagination.toDomain()
     )
 
 fun PaginationEntity.toDomain(): Pagination =
@@ -18,8 +18,8 @@ fun MetaEntity.toDomain(): Meta =
         msg, responseId, status
     )
 
-fun DataEntity.toDomain(): Data =
-    Data(
+fun GifEntity.toDomain(): Gif =
+    Gif(
         id,
         images.toDomain(),
         rating,

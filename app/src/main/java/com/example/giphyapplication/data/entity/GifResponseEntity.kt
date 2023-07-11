@@ -3,9 +3,9 @@ package com.example.giphyapplication.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class GifEntity(
+data class GifResponseEntity(
     @SerializedName("data")
-    val data: List<DataEntity>,
+    val gifs: List<GifEntity>,
     @SerializedName("meta")
     val meta: MetaEntity,
     @SerializedName("pagination")
@@ -30,7 +30,7 @@ data class MetaEntity(
     val status: Int
 )
 
-data class DataEntity(
+data class GifEntity(
     @SerializedName("id")
     val id: String,
     @SerializedName("images")

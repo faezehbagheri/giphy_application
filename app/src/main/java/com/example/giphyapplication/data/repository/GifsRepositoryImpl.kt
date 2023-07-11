@@ -16,7 +16,7 @@ class GifsRepositoryImpl @Inject constructor(
                 gifsService.getTrendingGifs(limit = 20, offset = 0)
             },
             { data ->
-                data.map { it.toDomain() }
+                data.gifs.map { it.toDomain() }
             }
         )
 }
