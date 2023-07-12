@@ -1,14 +1,18 @@
 package com.example.giphyapplication.widgets.basescreen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.giphyapplication.R
 
 @Composable
 fun BaseScreen(
@@ -26,6 +30,7 @@ fun BaseScreen(
     Scaffold(
         contentColor = MaterialTheme.colors.surface,
         backgroundColor = MaterialTheme.colors.background,
+        topBar = { TopBar() }
     ) { it ->
         Box(
             modifier
@@ -41,4 +46,34 @@ fun BaseScreen(
         }
     }
 
+}
+
+@Composable
+fun TopBar() {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.giphy_logo),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(16.dp)
+        )
+        Divider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    brush = Brush.horizontalGradient(
+                        colors = listOf(
+                            colorResource(id = R.color.red),
+                            colorResource(id = R.color.yellow),
+                            colorResource(id = R.color.green),
+                            colorResource(id = R.color.blue),
+                            colorResource(id = R.color.purple),
+                        )
+                    )
+                ),
+            thickness = 2.dp
+        )
+    }
 }
