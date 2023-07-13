@@ -1,5 +1,6 @@
 package com.example.giphyapplication.widgets.basescreen
 
+import DotsPulsing
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,11 +25,13 @@ data class LoadingConfig(
 fun Loading(modifier: Modifier = Modifier, config: LoadingConfig) {
 
     Column(
-        modifier = Modifier.fillMaxSize().background(MaterialTheme.colors.surface),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.surface),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
-
+    ) {
+        DotsPulsing()
     }
-    
+
 }

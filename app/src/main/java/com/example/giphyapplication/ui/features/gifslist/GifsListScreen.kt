@@ -67,7 +67,7 @@ fun GifsListScreen(
 ) = ScreenConfig(uiState = uiState) {
 
     val configuration = LocalConfiguration.current
-    val size = (configuration.screenWidthDp / 2)
+    val size = (configuration.screenWidthDp - 42) / 2
 
     LazyColumn(
         modifier = Modifier

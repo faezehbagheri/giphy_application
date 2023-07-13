@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 @Immutable
 @Parcelize
 data class GifsListUiState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isError: Boolean = false,
     val isEmpty: Boolean = false,
     val errorMessage: String = "",
