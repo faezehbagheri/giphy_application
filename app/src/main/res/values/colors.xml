@@ -13,4 +13,7 @@
     <color name="green">#FF09FB8D</color>
     <color name="blue">#FF00C5FD</color>
     <color name="purple">#FF8D2EFC</color>
+
+    <color name="text_color">#FFFFFFFF</color>
+    <color name="text_secondary_color">#9B9B9B</color>
 </resources>

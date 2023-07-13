@@ -21,7 +21,12 @@ class GifDetailsViewModel @Inject constructor(
 
     override fun mapIntents(intent: GifDetailsIntent): Flow<GifDetailsUiState.PartialState> =
         when (intent) {
-            else -> flow{}
+            is GifDetailsIntent.SetGifDetails -> flow {
+                emit(GifDetailsUiState.PartialState.SetGifDetails(intent.gif))
+            }
+            is GifDetailsIntent.OnNavigateUp -> flow{
+                publishEvent(GifDetailsEvent.OnNavigateUp)
+            }
         }
 
     override fun reduceUiState(
