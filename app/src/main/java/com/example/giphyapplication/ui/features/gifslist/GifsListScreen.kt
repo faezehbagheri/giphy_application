@@ -2,6 +2,7 @@ package com.example.giphyapplication.ui.features.gifslist
 
 import FlowRow
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -71,8 +72,9 @@ fun GifsListScreen(
 
     LazyColumn(
         modifier = Modifier
-            .fillMaxSize()) {
-        item{
+            .fillMaxSize()
+    ) {
+        item {
             FlowRow(
                 modifier = Modifier
                     .fillMaxSize()
@@ -84,7 +86,12 @@ fun GifsListScreen(
                     Image(
                         painter = rememberAsyncImagePainter(it.images.original.url),
                         contentDescription = null,
-                        modifier = Modifier.size(size.dp)
+                        modifier = Modifier
+                            .size(size.dp)
+                            .clickable {
+                                onIntent(GifsListIntent.NavigateToGifDetails(it.id))
+                            }
+
                     )
                 }
             }
@@ -99,7 +106,9 @@ fun HandleEvents(
 ) {
     events.collectWithLifecycle {
         when (it) {
-            else -> {}
+            is GifsListEvent.NavigateToGifDetails -> {
+                navController.navigate("gif_details/${it.id}")
+            }
         }
     }
 }

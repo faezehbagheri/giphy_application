@@ -28,7 +28,10 @@ class GifsListViewModel @Inject constructor(
 
     override fun mapIntents(intent: GifsListIntent): Flow<GifsListUiState.PartialState> =
         when (intent) {
-            GifsListIntent.FetchGifsList -> fetchGifsList()
+            is GifsListIntent.FetchGifsList -> fetchGifsList()
+            is GifsListIntent.NavigateToGifDetails -> flow {
+                publishEvent(GifsListEvent.NavigateToGifDetails(intent.id))
+            }
         }
 
     override fun reduceUiState(
