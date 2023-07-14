@@ -92,7 +92,7 @@ class GifsListViewModel @Inject constructor(
 
         if (page == 1 || (page != 1 && canPaginate) && listState != ListState.LOADING) {
 
-            getTrendingGifsUseCase(page).collect { result ->
+            call(getTrendingGifsUseCase(page)) { result ->
                 when (result) {
                     is GetResult.Success -> {
                         result.data?.let { data ->
