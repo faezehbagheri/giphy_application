@@ -10,10 +10,10 @@ import javax.inject.Inject
 class GifsRepositoryImpl @Inject constructor(
     private val gifsService: GifsService
 ) : GifsRepository {
-    override fun getTrendingGifs() =
+    override fun getTrendingGifs(page: Int) =
         networkResult(
             {
-                gifsService.getTrendingGifs(limit = 20, offset = 0)
+                gifsService.getTrendingGifs(limit = 15, offset = page * 15)
             },
             { data ->
                 data.gifs.map { it.toDomain() }

@@ -2,9 +2,8 @@ package com.example.giphyapplication.domain.repository
 
 import com.example.giphyapplication.common.result.GetResult
 import com.example.giphyapplication.domain.model.Gif
-import com.example.giphyapplication.domain.model.GifResponse
 import kotlinx.coroutines.flow.Flow
 
 interface GifsRepository {
-    fun getTrendingGifs(): Flow<GetResult<List<Gif>>>
+    fun getTrendingGifs(page: Int): Flow<GetResult<List<Gif>>>
 }

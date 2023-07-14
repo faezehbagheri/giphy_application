@@ -1,16 +1,12 @@
 package com.example.giphyapplication.ui.features.gifslist
 
-import FlowRow
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +16,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.giphyapplication.ui.features.gifslist.contract.GifsListEvent
 import com.example.giphyapplication.ui.features.gifslist.contract.GifsListIntent
 import com.example.giphyapplication.ui.features.gifslist.contract.GifsListUiState
+import com.example.giphyapplication.ui.features.gifslist.utils.ListState
 import com.example.giphyapplication.widgets.basescreen.BaseScreen
 import com.example.giphyapplication.widgets.basescreen.ErrorStateConfig
 import com.example.giphyapplication.widgets.utils.collectAsStateWithLifecycle
@@ -70,31 +67,41 @@ fun GifsListScreen(
     val configuration = LocalConfiguration.current
     val size = (configuration.screenWidthDp - 42) / 2
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        item {
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                mainAxisSpacing = 10.dp,
-                crossAxisSpacing = 10.dp
-            ) {
-                uiState.gifsList.forEach {
-                    Image(
-                        painter = rememberAsyncImagePainter(it.images.original.url),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(size.dp)
-                            .clickable {
-                                onIntent(GifsListIntent.NavigateToGifDetails(it.id))
-                            }
+    val lazyColumnListState = rememberLazyGridState()
+    val shouldStartPaginate = remember {
+        derivedStateOf {
+            uiState.canPaginate && (lazyColumnListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                ?: -9) >= (lazyColumnListState.layoutInfo.totalItemsCount - 6)
+        }
+    }
 
-                    )
-                }
-            }
+    LaunchedEffect(key1 = shouldStartPaginate.value) {
+        if (shouldStartPaginate.value && uiState.listState == ListState.IDLE)
+            onIntent(GifsListIntent.FetchGifsList)
+    }
+
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize(),
+        state = lazyColumnListState,
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
+        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
+    ) {
+        itemsIndexed(
+            items = uiState.gifsList,
+        ) { _, gif ->
+            Image(
+                painter = rememberAsyncImagePainter(gif.images.original.url),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(size.dp)
+                    .clickable {
+                        onIntent(GifsListIntent.NavigateToGifDetails(gif.id))
+                    }
+
+            )
         }
     }
 }
