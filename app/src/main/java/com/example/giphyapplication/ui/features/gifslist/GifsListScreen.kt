@@ -9,13 +9,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
+import com.example.giphyapplication.R
 import com.example.giphyapplication.ui.features.gifslist.contract.GifsListIntent
 import com.example.giphyapplication.composable.utils.collectAsStateWithLifecycle
 import com.example.giphyapplication.composable.widgets.ErrorStateView
@@ -97,9 +98,15 @@ private fun GifsList(
             .fillMaxSize(),
         state = lazyListState,
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.margin_normal)),
+        horizontalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.grid_space),
+            Alignment.CenterHorizontally
+        ),
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.grid_space),
+            Alignment.CenterVertically
+        )
     ) {
         items(
             count = lazyPagingItems.itemCount,

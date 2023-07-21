@@ -11,11 +11,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -84,7 +83,7 @@ private fun MainContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(dimensionResource(id = R.dimen.margin_normal)),
     ) {
         when (viewState) {
             is GifDetailsViewState.Loading -> {
@@ -106,9 +105,6 @@ private fun MainContent(
 private fun GifDetails(
     gif: Gif
 ) {
-    val configuration = LocalConfiguration.current
-    val size = configuration.screenWidthDp - 32
-
     val imageLoader = ImageLoader.Builder(LocalContext.current)
         .components {
             if (SDK_INT >= 28) {
@@ -122,18 +118,18 @@ private fun GifDetails(
     Image(
         painter = rememberAsyncImagePainter(gif.images.original.url, imageLoader),
         contentDescription = null,
-        modifier = Modifier.size(size.dp),
+        modifier = Modifier.aspectRatio(1f),
         contentScale = ContentScale.Fit
     )
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer_height_normal)))
     Text(
         text = gif.title, style = MaterialTheme.typography.body1.copy(
             color = colorResource(id = R.color.text_color),
         )
     )
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer_height_small)))
     KeyValueText(key = "Rating: ", value = gif.rating)
-    Spacer(modifier = Modifier.height(8.dp))
+    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.spacer_height_small)))
     KeyValueText(key = "Username: ", value = gif.username)
 }
 
