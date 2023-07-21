@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface GifsRepository {
     fun getTrendingGifs(): Flow<PagingData<Gif>>
+    fun getGifById(id: String): Flow<GetResult<Gif>>
 }

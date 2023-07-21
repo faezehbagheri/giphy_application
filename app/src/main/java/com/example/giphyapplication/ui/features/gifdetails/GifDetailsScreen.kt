@@ -24,7 +24,10 @@ import coil.decode.ImageDecoderDecoder
 import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsIntent
 import com.example.giphyapplication.composable.utils.collectAsStateWithLifecycle
 import com.example.giphyapplication.R
+import com.example.giphyapplication.composable.widgets.ErrorStateView
+import com.example.giphyapplication.composable.widgets.LoadingStateView
 import com.example.giphyapplication.composable.widgets.TopBar
+import com.example.giphyapplication.domain.model.Gif
 import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsUiState
 
 @Composable
@@ -54,6 +57,55 @@ private fun GifDetailsScreenLoader(
         onIntent(GifDetailsIntent.GetGifDetails(id))
     }
 
+    Scaffold(
+        topBar = {
+            TopBar(
+                withBackButton = true,
+                onNavigateUp = onNavigateUp,
+            )
+        },
+        content = { innerPadding ->
+            MainContent(
+                modifier = Modifier
+                    .padding(innerPadding),
+                viewState = uiState.viewState,
+                gif = uiState.gif
+            )
+        }
+    )
+}
+
+@Composable
+private fun MainContent(
+    modifier: Modifier,
+    viewState: GifDetailsViewState,
+    gif: Gif?
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+    ) {
+        when (viewState) {
+            is GifDetailsViewState.Loading -> {
+                LoadingStateView()
+            }
+            is GifDetailsViewState.Error -> {
+                ErrorStateView(onAction = {})
+            }
+            is GifDetailsViewState.Success -> {
+                gif?.let {
+                    GifDetails(it)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun GifDetails(
+    gif: Gif
+) {
     val configuration = LocalConfiguration.current
     val size = configuration.screenWidthDp - 32
 
@@ -67,41 +119,22 @@ private fun GifDetailsScreenLoader(
         }
         .build()
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                withBackButton = true,
-                onNavigateUp = onNavigateUp,
-            )
-        },
-        content = { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .padding(16.dp),
-            ) {
-                uiState.gif?.let {
-                    Image(
-                        painter = rememberAsyncImagePainter(it.images.original.url, imageLoader),
-                        contentDescription = null,
-                        modifier = Modifier.size(size.dp),
-                        contentScale = ContentScale.Fit
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = it.title, style = MaterialTheme.typography.body1.copy(
-                            color = colorResource(id = R.color.text_color),
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    KeyValueText(key = "Rating: ", value = it.rating)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    KeyValueText(key = "Username: ", value = it.username)
-                }
-            }
-        }
+    Image(
+        painter = rememberAsyncImagePainter(gif.images.original.url, imageLoader),
+        contentDescription = null,
+        modifier = Modifier.size(size.dp),
+        contentScale = ContentScale.Fit
     )
+    Spacer(modifier = Modifier.height(16.dp))
+    Text(
+        text = gif.title, style = MaterialTheme.typography.body1.copy(
+            color = colorResource(id = R.color.text_color),
+        )
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    KeyValueText(key = "Rating: ", value = gif.rating)
+    Spacer(modifier = Modifier.height(8.dp))
+    KeyValueText(key = "Username: ", value = gif.username)
 }
 
 @Composable

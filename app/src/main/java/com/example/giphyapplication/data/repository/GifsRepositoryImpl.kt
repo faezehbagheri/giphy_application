@@ -12,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class GifsRepositoryImpl @Inject constructor(
     private val gifsService: GifsService,
 ) : GifsRepository {
@@ -24,4 +25,15 @@ class GifsRepositoryImpl @Inject constructor(
                 GifsPagingSource(gifsService)
             }
         ).flow.map { it.map { data -> data.toDomain() } }
+
+
+    override fun getGifById(id: String) =
+        networkResult(
+            {
+                gifsService.getGifById(id)
+            },
+            { data ->
+                data.gifs.map { it.toDomain() }.first()
+            }
+        )
 }

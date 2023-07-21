@@ -16,4 +16,12 @@ interface GifsService {
         apiKey: String = BuildConfig.API_KEY
     ): GifResponseEntity
 
+    @GET("gifs")
+    suspend fun getGifById(
+        @Query("ids")
+        id: String,
+        @Query("api_key")
+        apiKey: String = BuildConfig.API_KEY,
+    ): GifResponseEntity
+
 }
