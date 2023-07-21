@@ -21,7 +21,7 @@ class GifDetailsViewModel @Inject constructor(
     override fun mapIntents(intent: GifDetailsIntent): Flow<GifDetailsUiState.PartialState> =
         when (intent) {
             is GifDetailsIntent.GetGifDetails -> flow {
-                emit(GifDetailsUiState.PartialState.SetGifDetails(intent.gif))
+                emit(GifDetailsUiState.PartialState.SetGifDetails(intent.id))
             }
         }
 
@@ -31,7 +31,7 @@ class GifDetailsViewModel @Inject constructor(
     ): GifDetailsUiState = when (partialState) {
         is GifDetailsUiState.PartialState.SetGifDetails -> {
             previousState.copy(
-                gif = partialState.gif
+//                gif = partialState.gif
             )
         }
     }

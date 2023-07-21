@@ -11,6 +11,6 @@ data class GifDetailsUiState(
     val gif: Gif? = null
 ) : Parcelable {
     sealed class PartialState {
-        data class SetGifDetails(val gif: Gif) : PartialState()
+        data class SetGifDetails(val id: String) : PartialState()
     }
 }

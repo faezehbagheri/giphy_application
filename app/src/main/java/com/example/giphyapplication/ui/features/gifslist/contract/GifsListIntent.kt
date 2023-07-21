@@ -1,12 +1,10 @@
 package com.example.giphyapplication.ui.features.gifslist.contract
 
+import androidx.paging.PagingData
 import com.example.giphyapplication.domain.model.Gif
 import com.example.giphyapplication.ui.features.gifslist.utils.ListState
+import kotlinx.coroutines.flow.Flow
 
-sealed class GifsListIntent{
-    object FetchGifsList : GifsListIntent()
-    data class OnReceivedGiftsList(val gifs: List<Gif>) : GifsListIntent()
-    data class OnPageChanged(val page: Int) : GifsListIntent()
-    data class OnCanPaginationChanged(val value: Boolean) : GifsListIntent()
-    data class OnListStateChanged(val state: ListState) : GifsListIntent()
+sealed class GifsListIntent {
+    data class OnReceivedGiftsList(val gifs: Flow<PagingData<Gif>>) : GifsListIntent()
 }

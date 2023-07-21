@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetTrendingGifsUseCase @Inject constructor(
     private val gifsRepository: GifsRepository
 ) {
-    operator fun invoke(page: Int) = gifsRepository.getTrendingGifs(page)
+    operator fun invoke() = gifsRepository.getTrendingGifs()
 }
