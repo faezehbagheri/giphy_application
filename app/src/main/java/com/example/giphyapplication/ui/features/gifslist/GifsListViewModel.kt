@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.giphyapplication.common.result.GetResult
 import com.example.giphyapplication.domain.usecase.GetTrendingGifsUseCase
 import com.example.giphyapplication.framework.BaseViewModel
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListEvent
 import com.example.giphyapplication.ui.features.gifslist.contract.GifsListIntent
 import com.example.giphyapplication.ui.features.gifslist.contract.GifsListUiState
 import com.example.giphyapplication.ui.features.gifslist.utils.ListState
@@ -18,7 +17,7 @@ class GifsListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     initialState: GifsListUiState,
     private val getTrendingGifsUseCase: GetTrendingGifsUseCase,
-) : BaseViewModel<GifsListUiState, GifsListUiState.PartialState, GifsListEvent, GifsListIntent>(
+) : BaseViewModel<GifsListUiState, GifsListUiState.PartialState, GifsListIntent>(
     savedStateHandle,
     initialState
 ) {
@@ -31,9 +30,6 @@ class GifsListViewModel @Inject constructor(
         when (intent) {
             is GifsListIntent.FetchGifsList -> flow {
                 getNews()
-            }
-            is GifsListIntent.NavigateToGifDetails -> flow {
-                publishEvent(GifsListEvent.NavigateToGifDetails(intent.id))
             }
             is GifsListIntent.OnReceivedGiftsList -> flow {
                 emit(GifsListUiState.PartialState.OnReceivedGiftsList(intent.gifs))

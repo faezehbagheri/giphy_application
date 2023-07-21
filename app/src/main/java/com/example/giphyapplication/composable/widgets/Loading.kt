@@ -1,4 +1,4 @@
-package com.example.giphyapplication.widgets.basescreen
+package com.example.giphyapplication.composable.widgets
 
 import DotsPulsing
 import androidx.annotation.StringRes

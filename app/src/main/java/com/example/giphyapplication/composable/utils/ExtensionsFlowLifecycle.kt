@@ -1,4 +1,4 @@
-package com.example.giphyapplication.widgets.utils
+package com.example.giphyapplication.composable.utils
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalLifecycleOwner

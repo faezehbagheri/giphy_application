@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -15,7 +14,7 @@ import timber.log.Timber
 private const val SAVED_UI_STATE_KEY = "savedUiStateKey"
 
 @OptIn(FlowPreview::class)
-abstract class BaseViewModel<UI_STATE : Parcelable, PARTIAL_UI_STATE, EVENT, INTENT>(
+abstract class BaseViewModel<UI_STATE : Parcelable, PARTIAL_UI_STATE, INTENT>(
     savedStateHandle: SavedStateHandle,
     initialState: UI_STATE
 ) : ViewModel() {
@@ -23,16 +22,11 @@ abstract class BaseViewModel<UI_STATE : Parcelable, PARTIAL_UI_STATE, EVENT, INT
 
     val uiState = savedStateHandle.getStateFlow(SAVED_UI_STATE_KEY, initialState)
 
-    private val eventChannel = Channel<EVENT>(Channel.BUFFERED)
-    val event = eventChannel.receiveAsFlow()
-
     private val handler = CoroutineExceptionHandler { _, exception ->
         handleError(exception)
     }
 
     open fun handleError(exception: Throwable) {}
-
-    open fun startLoading() {}
 
     protected fun safeLaunch(block: suspend CoroutineScope.() -> Unit) =
         viewModelScope.launch(handler, block = block)
@@ -67,12 +61,6 @@ abstract class BaseViewModel<UI_STATE : Parcelable, PARTIAL_UI_STATE, EVENT, INT
         safeLaunch {
             intentFlow.emit(intent)
         }
-
-    protected fun publishEvent(event: EVENT) {
-        safeLaunch {
-            eventChannel.send(event)
-        }
-    }
 
     protected abstract fun mapIntents(intent: INTENT): Flow<PARTIAL_UI_STATE>
 

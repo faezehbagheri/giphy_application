@@ -3,8 +3,8 @@ package com.example.giphyapplication.ui.features.gifdetails
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,68 +16,43 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.example.giphyapplication.domain.model.Gif
-import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsEvent
 import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsIntent
-import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsUiState
-import com.example.giphyapplication.widgets.basescreen.BaseScreen
-import com.example.giphyapplication.widgets.basescreen.ErrorStateConfig
-import com.example.giphyapplication.widgets.utils.collectAsStateWithLifecycle
-import com.example.giphyapplication.widgets.utils.collectWithLifecycle
-import kotlinx.coroutines.flow.Flow
+import com.example.giphyapplication.composable.utils.collectAsStateWithLifecycle
 import com.example.giphyapplication.R
+import com.example.giphyapplication.composable.widgets.TopBar
+import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsUiState
 
-@ExperimentalMaterialApi
 @Composable
-private fun ScreenConfig(
-    onIntent: (GifDetailsIntent) -> Unit,
-    content: @Composable () -> Unit,
-) = BaseScreen(
-    padding = PaddingValues(0.dp),
-    errorStateConfig = ErrorStateConfig(),
-    withBackButton = true,
-    onNavigateUp = {
-        onIntent(GifDetailsIntent.OnNavigateUp)
-    },
-    content = content
-)
-
-@ExperimentalMaterialApi
-@Composable
-fun GifDetailsRoute(
-    gif: Gif,
+fun GifDetailsScreen(
+    id: String,
     viewModel: GifDetailsViewModel,
-    navController: NavHostController,
+    onNavigateUp: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(key1 = viewModel) {
-        viewModel.acceptIntent(GifDetailsIntent.SetGifDetails(gif))
-    }
-
-    HandleEvents(
-        viewModel.event,
-        navController,
-    )
-
-    GifDetailsScreen(
+    GifDetailsScreenLoader(
+        id = id,
         uiState = uiState,
         onIntent = viewModel::acceptIntent,
+        onNavigateUp = onNavigateUp,
     )
-
 }
 
-@ExperimentalMaterialApi
 @Composable
-fun GifDetailsScreen(
+private fun GifDetailsScreenLoader(
+    id: String,
     uiState: GifDetailsUiState,
     onIntent: (GifDetailsIntent) -> Unit,
-) = ScreenConfig(onIntent) {
+    onNavigateUp: () -> Unit,
+) {
+    LaunchedEffect(key1 = 1) {
+        onIntent(GifDetailsIntent.GetGifDetails(id))
+    }
 
     val configuration = LocalConfiguration.current
     val size = configuration.screenWidthDp - 32
@@ -92,30 +67,41 @@ fun GifDetailsScreen(
         }
         .build()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-    ) {
-        uiState.gif?.let {
-            Image(
-                painter = rememberAsyncImagePainter(it.images.original.url, imageLoader),
-                contentDescription = null,
-                modifier = Modifier.size(size.dp),
-                contentScale = ContentScale.Fit
+    Scaffold(
+        topBar = {
+            TopBar(
+                withBackButton = true,
+                onNavigateUp = onNavigateUp,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = it.title, style = MaterialTheme.typography.body1.copy(
-                    color = colorResource(id = R.color.text_color),
-                )
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            KeyValueText(key = "Rating: ", value = it.rating)
-            Spacer(modifier = Modifier.height(8.dp))
-            KeyValueText(key = "Username: ", value = it.username)
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp),
+            ) {
+                uiState.gif?.let {
+                    Image(
+                        painter = rememberAsyncImagePainter(it.images.original.url, imageLoader),
+                        contentDescription = null,
+                        modifier = Modifier.size(size.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = it.title, style = MaterialTheme.typography.body1.copy(
+                            color = colorResource(id = R.color.text_color),
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    KeyValueText(key = "Rating: ", value = it.rating)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    KeyValueText(key = "Username: ", value = it.username)
+                }
+            }
         }
-    }
+    )
 }
 
 @Composable
@@ -130,25 +116,11 @@ private fun KeyValueText(
 }
 
 @Composable
-fun HandleEvents(
-    events: Flow<GifDetailsEvent>,
-    navController: NavHostController,
-) {
-    events.collectWithLifecycle {
-        when (it) {
-            is GifDetailsEvent.OnNavigateUp -> {
-                navController.popBackStack()
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
 @Preview
 fun PreviewGifsListScreen() {
     GifDetailsScreen(
-        uiState = GifDetailsUiState(),
-        onIntent = {}
+        viewModel = hiltViewModel(),
+        onNavigateUp = {},
+        id = "",
     )
 }

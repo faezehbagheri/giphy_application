@@ -2,7 +2,6 @@ package com.example.giphyapplication.ui.features.gifdetails
 
 import androidx.lifecycle.SavedStateHandle
 import com.example.giphyapplication.framework.BaseViewModel
-import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsEvent
 import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsIntent
 import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,18 +13,15 @@ import javax.inject.Inject
 class GifDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     initialState: GifDetailsUiState,
-) : BaseViewModel<GifDetailsUiState, GifDetailsUiState.PartialState, GifDetailsEvent, GifDetailsIntent>(
+) : BaseViewModel<GifDetailsUiState, GifDetailsUiState.PartialState, GifDetailsIntent>(
     savedStateHandle,
     initialState
 ) {
 
     override fun mapIntents(intent: GifDetailsIntent): Flow<GifDetailsUiState.PartialState> =
         when (intent) {
-            is GifDetailsIntent.SetGifDetails -> flow {
+            is GifDetailsIntent.GetGifDetails -> flow {
                 emit(GifDetailsUiState.PartialState.SetGifDetails(intent.gif))
-            }
-            is GifDetailsIntent.OnNavigateUp -> flow{
-                publishEvent(GifDetailsEvent.OnNavigateUp)
             }
         }
 
