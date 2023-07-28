@@ -7,7 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,85 +20,73 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsIntent
-import com.example.giphyapplication.composable.utils.collectAsStateWithLifecycle
 import com.example.giphyapplication.R
-import com.example.giphyapplication.composable.widgets.ErrorStateView
-import com.example.giphyapplication.composable.widgets.LoadingStateView
-import com.example.giphyapplication.composable.widgets.TopBar
+import com.example.giphyapplication.composable.ErrorStateView
+import com.example.giphyapplication.composable.LoadingStateView
+import com.example.giphyapplication.composable.TopBar
 import com.example.giphyapplication.domain.model.Gif
-import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsUiState
+import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsActions
+import com.example.giphyapplication.ui.features.gifdetails.contract.GifDetailsViewState
 
 @Composable
 fun GifDetailsScreen(
-    id: String,
     viewModel: GifDetailsViewModel,
     onNavigateUp: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     GifDetailsScreenLoader(
-        id = id,
-        uiState = uiState,
-        onIntent = viewModel::acceptIntent,
+        viewModel = viewModel,
         onNavigateUp = onNavigateUp,
     )
 }
 
 @Composable
 private fun GifDetailsScreenLoader(
-    id: String,
-    uiState: GifDetailsUiState,
-    onIntent: (GifDetailsIntent) -> Unit,
+    viewModel: GifDetailsViewModel,
     onNavigateUp: () -> Unit,
 ) {
-    LaunchedEffect(key1 = 1) {
-        onIntent(GifDetailsIntent.GetGifDetails(id))
-    }
+    val state by viewModel.uiState.collectAsState()
+    val actions = GifDetailsActions(
+        navigateUp = onNavigateUp,
+        retry = viewModel::retry,
+    )
 
+    GifDetailsScaffold(viewState = state, actions = actions)
+
+}
+
+@Composable
+internal fun GifDetailsScaffold(
+    viewState: GifDetailsViewState,
+    actions: GifDetailsActions,
+) {
     Scaffold(
         topBar = {
             TopBar(
                 withBackButton = true,
-                onNavigateUp = onNavigateUp,
+                onNavigateUp = actions.navigateUp,
             )
         },
         content = { innerPadding ->
-            MainContent(
+            Column(
                 modifier = Modifier
-                    .padding(innerPadding),
-                viewState = uiState.viewState,
-                gif = uiState.gif
-            )
-        }
-    )
-}
-
-@Composable
-private fun MainContent(
-    modifier: Modifier,
-    viewState: GifDetailsViewState,
-    gif: Gif?
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.margin_normal)),
-    ) {
-        when (viewState) {
-            is GifDetailsViewState.Loading -> {
-                LoadingStateView()
-            }
-            is GifDetailsViewState.Error -> {
-                ErrorStateView(onAction = {})
-            }
-            is GifDetailsViewState.Success -> {
-                gif?.let {
-                    GifDetails(it)
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(dimensionResource(id = R.dimen.margin_normal)),
+            ) {
+                when (viewState) {
+                    is GifDetailsViewState.Loading -> {
+                        LoadingStateView()
+                    }
+                    is GifDetailsViewState.Error -> {
+                        ErrorStateView(onRetry = actions.retry)
+                    }
+                    is GifDetailsViewState.Result -> {
+                        GifDetails(viewState.gif)
+                    }
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -150,6 +138,5 @@ fun PreviewGifsListScreen() {
     GifDetailsScreen(
         viewModel = hiltViewModel(),
         onNavigateUp = {},
-        id = "",
     )
 }

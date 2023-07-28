@@ -17,47 +17,54 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
 import com.example.giphyapplication.R
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListIntent
-import com.example.giphyapplication.composable.utils.collectAsStateWithLifecycle
-import com.example.giphyapplication.composable.widgets.ErrorStateView
-import com.example.giphyapplication.composable.widgets.InitialStateView
-import com.example.giphyapplication.composable.widgets.LoadingStateView
-import com.example.giphyapplication.composable.widgets.TopBar
+import com.example.giphyapplication.composable.ErrorStateView
+import com.example.giphyapplication.composable.InitialStateView
+import com.example.giphyapplication.composable.LoadingStateView
+import com.example.giphyapplication.composable.TopBar
 import com.example.giphyapplication.domain.model.Gif
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListUiState
+import com.example.giphyapplication.ui.features.gifslist.contract.GifsListActions
+import com.example.giphyapplication.ui.features.gifslist.contract.GifsListViewState
 
 @Composable
 fun GifsListScreen(
     viewModel: GifsListViewModel,
     onNavigateToGifsDetails: (id: String) -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     GifsListScreenLoader(
-        uiState = uiState,
-        onIntent = viewModel::acceptIntent,
+        viewModel = viewModel,
         onNavigateToGifsDetails = onNavigateToGifsDetails,
     )
 }
 
 @Composable
 private fun GifsListScreenLoader(
-    uiState: GifsListUiState,
-    onIntent: (GifsListIntent) -> Unit,
+    viewModel: GifsListViewModel,
     onNavigateToGifsDetails: (id: String) -> Unit,
 ) {
-    val lazyPagingItems = uiState.pagingGifs?.collectAsLazyPagingItems()
 
+    val viewState by viewModel.uiState.collectAsState()
+    val actions = GifsListActions(
+        navigateToDetails = onNavigateToGifsDetails
+    )
+
+    GifsListScaffold(viewState, actions)
+}
+
+@Composable
+internal fun GifsListScaffold(
+    viewState: GifsListViewState,
+    actions: GifsListActions
+) {
     Scaffold(
         topBar = { TopBar(withBackButton = false) },
-        content = { innerPadding ->
-            MainContent(
-                modifier = Modifier.padding(innerPadding),
-                lazyPagingItems = lazyPagingItems,
-                onNavigateToGifsDetails = onNavigateToGifsDetails
-            )
-        }
-    )
+    ) { innerPadding ->
+        val lazyPagingItems = viewState.pagingData?.collectAsLazyPagingItems()
+        MainContent(
+            modifier = Modifier.padding(innerPadding),
+            lazyPagingItems = lazyPagingItems,
+            onNavigateToGifsDetails = actions.navigateToDetails
+        )
+    }
 }
 
 @Composable
@@ -74,7 +81,7 @@ private fun MainContent(
         LoadingStateView()
     } else if (refreshLoadState is LoadState.Error) {
         ErrorStateView(
-            onAction = { lazyPagingItems.retry() },
+            onRetry = { lazyPagingItems.retry() },
         )
     } else {
         GifsList(

@@ -1,52 +1,32 @@
 package com.example.giphyapplication.ui.features.gifslist
 
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.example.giphyapplication.domain.usecase.GetTrendingGifsUseCase
 import com.example.giphyapplication.framework.BaseViewModel
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListIntent
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListUiState
+import com.example.giphyapplication.ui.features.gifslist.contract.GifsListViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
 class GifsListViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
-    initialState: GifsListUiState,
     private val getTrendingGifsUseCase: GetTrendingGifsUseCase,
-) : BaseViewModel<GifsListUiState, GifsListUiState.PartialState, GifsListIntent>(
-    savedStateHandle,
-    initialState
-) {
+) : BaseViewModel() {
+
+    private val viewModelState = MutableStateFlow(GifsListViewState())
+    val uiState = viewModelState.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = viewModelState.value
+    )
 
     init {
-        getNews()
+        getGifsList()
     }
 
-    override fun mapIntents(intent: GifsListIntent): Flow<GifsListUiState.PartialState> =
-        when (intent) {
-            is GifsListIntent.OnReceivedGiftsList -> flow {
-                emit(GifsListUiState.PartialState.OnReceivedGiftsList(intent.gifs))
-            }
+    private fun getGifsList() = safeLaunch {
+        viewModelState.update { state ->
+            state.copy( pagingData = getTrendingGifsUseCase())
         }
-
-    override fun reduceUiState(
-        previousState: GifsListUiState,
-        partialState: GifsListUiState.PartialState
-    ): GifsListUiState = when (partialState) {
-        is GifsListUiState.PartialState.OnReceivedGiftsList -> {
-            previousState.copy(
-                pagingGifs = partialState.gifs,
-            )
-        }
-    }
-
-    private fun getNews() = safeLaunch {
-        acceptIntent(
-            GifsListIntent.OnReceivedGiftsList(
-                getTrendingGifsUseCase.invoke()
-            )
-        )
     }
 }

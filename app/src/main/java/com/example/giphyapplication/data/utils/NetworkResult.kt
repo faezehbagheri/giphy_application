@@ -15,7 +15,7 @@ abstract class NetworkResult<TResult, TRemote> {
     fun asFlow(): Flow<GetResult<TResult>> =
         flow {
             try {
-                emit(GetResult.Loading())
+                emit(GetResult.Loading)
                 val response = callRemote()
                 emit(GetResult.Success(mapRemoteToResult(response)))
             } catch (ex: Exception) {

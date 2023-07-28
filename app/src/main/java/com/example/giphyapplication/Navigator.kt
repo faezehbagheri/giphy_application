@@ -34,12 +34,9 @@ fun Navigator(
         composable(
             route = "${Destinations.GIF_DETAILS}/{${DestinationArgs.GIF_ID}}",
             arguments = listOf(navArgument(DestinationArgs.GIF_ID) { type = NavType.StringType })
-        ) { backStackEntry ->
+        ) {
             val viewModel: GifDetailsViewModel = hiltViewModel()
-            val id = backStackEntry.arguments?.getString(DestinationArgs.GIF_ID) ?: "0"
-
             GifDetailsScreen(
-                id = id,
                 viewModel = viewModel,
                 onNavigateUp = actions.navigateBack
             )

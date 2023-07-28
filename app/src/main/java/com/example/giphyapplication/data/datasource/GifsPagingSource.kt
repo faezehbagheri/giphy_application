@@ -2,9 +2,9 @@ package com.example.giphyapplication.data.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.giphyapplication.common.LIMIT
 import com.example.giphyapplication.data.entity.GifEntity
 import com.example.giphyapplication.data.remote.GifsService
+import com.example.giphyapplication.data.repository.LIMIT
 
 class GifsPagingSource(
     private val gifsService: GifsService,
