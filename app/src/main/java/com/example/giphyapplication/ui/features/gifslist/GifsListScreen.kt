@@ -4,128 +4,150 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material.*
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListEvent
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListIntent
-import com.example.giphyapplication.ui.features.gifslist.contract.GifsListUiState
-import com.example.giphyapplication.ui.features.gifslist.utils.ListState
-import com.example.giphyapplication.widgets.basescreen.BaseScreen
-import com.example.giphyapplication.widgets.basescreen.ErrorStateConfig
-import com.example.giphyapplication.widgets.utils.collectAsStateWithLifecycle
-import com.example.giphyapplication.widgets.utils.collectWithLifecycle
-import kotlinx.coroutines.flow.Flow
+import com.example.giphyapplication.R
+import com.example.giphyapplication.composable.ErrorStateView
+import com.example.giphyapplication.composable.InitialStateView
+import com.example.giphyapplication.composable.LoadingStateView
+import com.example.giphyapplication.composable.TopBar
+import com.example.giphyapplication.domain.model.Gif
+import com.example.giphyapplication.ui.features.gifslist.contract.GifsListActions
+import com.example.giphyapplication.ui.features.gifslist.contract.GifsListViewState
 
-@ExperimentalMaterialApi
-@Composable
-private fun ScreenConfig(
-    uiState: GifsListUiState,
-    content: @Composable () -> Unit
-) = BaseScreen(
-    isLoading = uiState.isLoading,
-    isError = uiState.isError,
-    isEmpty = uiState.isEmpty,
-    padding = PaddingValues(0.dp),
-    errorStateConfig = ErrorStateConfig(),
-    content = content
-)
-
-@ExperimentalMaterialApi
-@Composable
-fun GifsListRoute(
-    viewModel: GifsListViewModel,
-    navController: NavHostController,
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    HandleEvents(
-        viewModel.event,
-        navController,
-    )
-
-    GifsListScreen(
-        uiState = uiState,
-        onIntent = viewModel::acceptIntent,
-    )
-
-}
-
-@ExperimentalMaterialApi
 @Composable
 fun GifsListScreen(
-    uiState: GifsListUiState,
-    onIntent: (GifsListIntent) -> Unit,
-) = ScreenConfig(uiState = uiState) {
+    viewModel: GifsListViewModel,
+    onNavigateToGifsDetails: (id: String) -> Unit,
+) {
+    GifsListScreenLoader(
+        viewModel = viewModel,
+        onNavigateToGifsDetails = onNavigateToGifsDetails,
+    )
+}
 
-    val configuration = LocalConfiguration.current
-    val size = (configuration.screenWidthDp - 42) / 2
+@Composable
+private fun GifsListScreenLoader(
+    viewModel: GifsListViewModel,
+    onNavigateToGifsDetails: (id: String) -> Unit,
+) {
 
-    val lazyColumnListState = rememberLazyGridState()
-    val shouldStartPaginate = remember {
-        derivedStateOf {
-            uiState.canPaginate && (lazyColumnListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
-                ?: -9) >= (lazyColumnListState.layoutInfo.totalItemsCount - 6)
-        }
-    }
+    val viewState by viewModel.uiState.collectAsState()
+    val actions = GifsListActions(
+        navigateToDetails = onNavigateToGifsDetails
+    )
 
-    LaunchedEffect(key1 = shouldStartPaginate.value) {
-        if (shouldStartPaginate.value && uiState.listState == ListState.IDLE)
-            onIntent(GifsListIntent.FetchGifsList)
-    }
+    GifsListScaffold(viewState, actions)
+}
 
-    LazyVerticalGrid(
-        modifier = Modifier
-            .fillMaxSize(),
-        state = lazyColumnListState,
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterHorizontally),
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.CenterVertically)
-    ) {
-        itemsIndexed(
-            items = uiState.gifsList,
-        ) { _, gif ->
-            Image(
-                painter = rememberAsyncImagePainter(gif.images.original.url),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(size.dp)
-                    .clickable {
-                        onIntent(GifsListIntent.NavigateToGifDetails(gif.id))
-                    }
-
-            )
-        }
+@Composable
+internal fun GifsListScaffold(
+    viewState: GifsListViewState,
+    actions: GifsListActions
+) {
+    Scaffold(
+        topBar = { TopBar(withBackButton = false) },
+    ) { innerPadding ->
+        val lazyPagingItems = viewState.pagingData?.collectAsLazyPagingItems()
+        MainContent(
+            modifier = Modifier.padding(innerPadding),
+            lazyPagingItems = lazyPagingItems,
+            onNavigateToGifsDetails = actions.navigateToDetails
+        )
     }
 }
 
 @Composable
-fun HandleEvents(
-    events: Flow<GifsListEvent>,
-    navController: NavHostController,
+private fun MainContent(
+    modifier: Modifier = Modifier,
+    lazyPagingItems: LazyPagingItems<Gif>?,
+    onNavigateToGifsDetails: (String) -> Unit
 ) {
-    events.collectWithLifecycle {
-        when (it) {
-            is GifsListEvent.NavigateToGifDetails -> {
-                navController.navigate("gif_details/${it.id}")
+    val refreshLoadState = lazyPagingItems?.loadState?.refresh
+
+    if (lazyPagingItems == null) {
+        InitialStateView()
+    } else if (refreshLoadState is LoadState.Loading) {
+        LoadingStateView()
+    } else if (refreshLoadState is LoadState.Error) {
+        ErrorStateView(
+            onRetry = { lazyPagingItems.retry() },
+        )
+    } else {
+        GifsList(
+            modifier = modifier,
+            lazyPagingItems = lazyPagingItems,
+            onNavigateToGifsDetails = onNavigateToGifsDetails
+        )
+    }
+}
+
+@Composable
+private fun GifsList(
+    modifier: Modifier = Modifier,
+    lazyPagingItems: LazyPagingItems<Gif>,
+    onNavigateToGifsDetails: (String) -> Unit
+) {
+    val lazyListState = rememberLazyGridState()
+
+    LazyVerticalGrid(
+        modifier = modifier
+            .fillMaxSize(),
+        state = lazyListState,
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(dimensionResource(id = R.dimen.margin_normal)),
+        horizontalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.grid_space),
+            Alignment.CenterHorizontally
+        ),
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(id = R.dimen.grid_space),
+            Alignment.CenterVertically
+        )
+    ) {
+        items(
+            count = lazyPagingItems.itemCount,
+        ) { index ->
+            val gif = lazyPagingItems[index]
+            gif?.let {
+                GifItem(it, onNavigateToGifsDetails)
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun GifItem(
+    gif: Gif,
+    onNavigateToGifsDetails: (String) -> Unit
+) {
+    Image(
+        painter = rememberAsyncImagePainter(gif.images.original.url),
+        contentDescription = null,
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .aspectRatio(1f)
+            .clickable {
+                onNavigateToGifsDetails(gif.id)
+            }
+    )
+}
+
 @Composable
 @Preview
 fun PreviewGifsListScreen() {
     GifsListScreen(
-        uiState = GifsListUiState(),
-        onIntent = {}
+        viewModel = hiltViewModel(),
+        onNavigateToGifsDetails = {},
     )
 }
