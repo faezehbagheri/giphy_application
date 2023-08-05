@@ -1,0 +1,4 @@
+<resources>
+    <string name="no_data">There is no data to display</string>
+    <string name="retry">Try again</string>
+</resources>
