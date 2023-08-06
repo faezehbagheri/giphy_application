@@ -38,9 +38,9 @@ class GifDetailsViewModel @Inject constructor(
     private fun getGifDetails() = safeLaunch {
         getGifByIdUseCase(gifId).collect { result ->
             val state = when (result) {
-                is com.example.common.result.GetResult.Error -> GifDetailsViewState.Error
-                is com.example.common.result.GetResult.Loading -> GifDetailsViewState.Loading
-                is com.example.common.result.GetResult.Success -> GifDetailsViewState.Result(result.data)
+                is GetResult.Error -> GifDetailsViewState.Error
+                is GetResult.Loading -> GifDetailsViewState.Loading
+                is GetResult.Success -> GifDetailsViewState.Result(result.data)
             }
             viewModelState.emit(state)
         }

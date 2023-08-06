@@ -16,6 +16,7 @@ android {
             )
         }
     }
+
 }
 
 dependencies {
@@ -24,4 +25,5 @@ dependencies {
     testImplementation(Libs.AndroidX.Test.junit)
     androidTestImplementation(Libs.AndroidX.Test.testJunit)
     androidTestImplementation(Libs.AndroidX.Test.espresso)
+
 }

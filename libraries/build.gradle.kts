@@ -47,4 +47,5 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espresso)
     androidTestImplementation(Libs.AndroidX.Compose.uiTestJunit)
     debugImplementation(Libs.AndroidX.Compose.uiTestManifest)
+
 }

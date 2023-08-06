@@ -12,16 +12,16 @@ abstract class NetworkResult<TResult, TRemote> {
     protected abstract fun mapRemoteToResult(data: TRemote): TResult
 
     @ExperimentalCoroutinesApi
-    fun asFlow(): Flow<com.example.common.result.GetResult<TResult>> =
+    fun asFlow(): Flow<GetResult<TResult>> =
         flow {
             try {
-                emit(com.example.common.result.GetResult.Loading)
+                emit(GetResult.Loading)
                 val response = callRemote()
-                emit(com.example.common.result.GetResult.Success(mapRemoteToResult(response)))
+                emit(GetResult.Success(mapRemoteToResult(response)))
             } catch (ex: Exception) {
-                emit(com.example.common.result.GetResult.Error(ex))
+                emit(GetResult.Error(ex))
             }
-        }.catch { ex -> emit(com.example.common.result.GetResult.Error(ex)) }
+        }.catch { ex -> emit(GetResult.Error(ex)) }
             .conflate()
             .flowOn(Dispatchers.IO)
 }
@@ -30,7 +30,7 @@ abstract class NetworkResult<TResult, TRemote> {
 fun <TResult, TRemote> networkResult(
     callRemote: suspend () -> TRemote,
     mapRemoteToResult: (data: TRemote) -> TResult,
-): Flow<com.example.common.result.GetResult<TResult>> = object : NetworkResult<TResult, TRemote>() {
+): Flow<GetResult<TResult>> = object : NetworkResult<TResult, TRemote>() {
     override suspend fun callRemote(): TRemote = callRemote()
 
     override fun mapRemoteToResult(data: TRemote): TResult = mapRemoteToResult(data)
