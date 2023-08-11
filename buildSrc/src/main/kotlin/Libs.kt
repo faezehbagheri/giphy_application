@@ -33,10 +33,13 @@ object Libs {
         }
 
         object Test {
-            const val junit = "junit:junit:4.13.2"
             const val testJunit = "androidx.test.ext:junit:1.1.5"
             const val espresso = "androidx.test.espresso:espresso-core:3.5.1"
         }
+    }
+
+    object Test {
+        const val junit = "junit:junit:4.13.2"
     }
 
     object Hilt {
@@ -44,6 +47,10 @@ object Libs {
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
         const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+    }
+
+    object JavaX {
+        const val inject = "javax.inject:javax.inject:1"
     }
 
     object Retrofit {
@@ -78,6 +85,7 @@ object Libs {
 
     object Pagination {
         private const val version = "3.1.1"
+        const val pagingCommon = "androidx.paging:paging-common:$version"
         const val paging = "androidx.paging:paging-runtime:$version"
         const val pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha17"
     }

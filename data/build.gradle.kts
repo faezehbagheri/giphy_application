@@ -11,6 +11,9 @@ plugins {
 android {
     namespace = "com.example.data"
     compileSdk = ConfigurationData.compileSdk
+    defaultConfig {
+        minSdk = ConfigurationData.minSdk
+    }
 
     defaultConfig {
         val projectProperties = readProperties(file("../local.properties"))
@@ -31,7 +34,7 @@ dependencies {
     implementation(project(":common"))
 
     implementation(Libs.AndroidX.core)
-    testImplementation(Libs.AndroidX.Test.junit)
+    testImplementation(Libs.Test.junit)
     androidTestImplementation(Libs.AndroidX.Test.testJunit)
     androidTestImplementation(Libs.AndroidX.Test.espresso)
     implementation(Libs.AndroidX.appcompat)
