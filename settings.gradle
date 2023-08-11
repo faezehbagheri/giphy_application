@@ -10,7 +10,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "Giphy Application"
 include ':app'
+include ':domain'
+include ':data'
+include ':libraries'
+include ':common'
