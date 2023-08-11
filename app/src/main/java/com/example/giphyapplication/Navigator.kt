@@ -8,12 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.features.gifdetail.GifDetailsScreen
+import com.example.features.gifdetail.GifDetailsViewModel
 import com.example.libraries.navigation.DestinationArgs
 import com.example.libraries.navigation.Destinations
-import com.example.giphyapplication.ui.gifdetails.GifDetailsScreen
-import com.example.giphyapplication.ui.gifdetails.GifDetailsViewModel
-import com.example.giphyapplication.ui.gifslist.GifsListScreen
-import com.example.giphyapplication.ui.gifslist.GifsListViewModel
+import com.example.features.search.GifsListScreen
+import com.example.features.search.GifsListViewModel
 
 @Composable
 fun Navigator(

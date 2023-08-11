@@ -56,7 +56,11 @@ android {
 dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
-    implementation(project(":libraries"))
+    implementation(project(":features:search"))
+    implementation(project(":features:gifdetail"))
+    implementation(project(":libraries:designsystem"))
+    implementation(project(":libraries:navigation"))
+    implementation(project(":libraries:utils"))
     implementation(project(":common"))
 
     implementation(Libs.AndroidX.core)
@@ -66,7 +70,7 @@ dependencies {
     implementation(Libs.AndroidX.Compose.toolingPreview)
     debugImplementation(Libs.AndroidX.Compose.tooling)
     implementation(Libs.AndroidX.Compose.material)
-    testImplementation(Libs.AndroidX.Test.junit)
+    testImplementation(Libs.Test.junit)
 
     ///Hilt
     implementation(Libs.Hilt.hilt)
