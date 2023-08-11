@@ -15,6 +15,19 @@ android {
         minSdk = ConfigurationData.minSdk
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
     defaultConfig {
         val projectProperties = readProperties(file("../local.properties"))
 

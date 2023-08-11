@@ -1,6 +1,6 @@
 object Libs {
-    const val androidApplication = "com.android.application:7.4.0"
-    const val androidLibrary = "com.android.library:7.4.0"
+    const val androidApplication = "com.android.application:8.0.1"
+    const val androidLibrary = "com.android.library:8.0.1"
     const val kotlinAndroid = "org.jetbrains.kotlin.android:1.7.0"
     const val daggerHilt = "com.google.dagger.hilt.android:2.42"
 
@@ -16,8 +16,8 @@ object Libs {
         }
 
         object Compose {
-            private const val version = "1.3.1"
-            private const val compose_ui_version = "1.3.2"
+            private const val version = "1.5.0"
+            private const val compose_ui_version = "1.5.0"
 
             const val runtime = "androidx.compose.runtime:runtime:$version"
             const val foundation = "androidx.compose.foundation:foundation:${version}"
@@ -43,10 +43,10 @@ object Libs {
     }
 
     object Hilt {
-        private const val version = "2.42"
+        private const val version = "2.47"
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
-        const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+        const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
     }
 
     object JavaX {
@@ -82,11 +82,10 @@ object Libs {
         const val coilGif = "io.coil-kt:coil-gif:2.2.2"
     }
 
-
     object Pagination {
         private const val version = "3.1.1"
         const val pagingCommon = "androidx.paging:paging-common:$version"
         const val paging = "androidx.paging:paging-runtime:$version"
-        const val pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha17"
+        const val pagingCompose = "androidx.paging:paging-compose:3.2.0"
     }
 }

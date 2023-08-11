@@ -3,10 +3,12 @@ package com.example.features.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.GetTrendingGifsUseCase
-import com.example.libraries.utils.coroutines.safeLaunch
 import com.example.features.search.contract.GifsListViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +28,7 @@ class GifsListViewModel @Inject constructor(
         getGifsList()
     }
 
-    private fun getGifsList() = safeLaunch {
+    private fun getGifsList() {
         viewModelState.update { state ->
             state.copy( pagingData = getTrendingGifsUseCase())
         }

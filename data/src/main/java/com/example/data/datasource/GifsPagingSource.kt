@@ -5,29 +5,43 @@ import androidx.paging.PagingState
 import com.example.data.entity.GifEntity
 import com.example.data.remote.GifsService
 import com.example.data.repository.LIMIT
+import retrofit2.HttpException
+import java.io.IOException
 
 class GifsPagingSource(
     private val gifsService: GifsService,
-): PagingSource<Int, GifEntity>() {
+) : PagingSource<Int, GifEntity>() {
+
     override fun getRefreshKey(state: PagingState<Int, GifEntity>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+            state.closestPageToPosition(anchorPosition)
+                ?.prevKey?.plus(1)
+                ?: state.closestPageToPosition(anchorPosition)
+                    ?.nextKey?.minus(1)
         }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GifEntity> {
+        val page = params.key ?: STARTING_PAGE_INDEX
         return try {
-            val page = params.key ?: 0
             val response = gifsService.getTrendingGifs(offset = page * LIMIT, limit = LIMIT)
-
-            LoadResult.Page(
-                data = response.gifs,
-                prevKey = if (page == 0) null else page.minus(1),
-                nextKey = if (response.gifs.isEmpty()) null else page.plus(1),
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
+            val nextKey = (page + 1).let {
+                if (response.gifs.size < LIMIT || it == params.key) {
+                    null
+                } else {
+                    it
+                }
+            }
+            val prevKey = if (page == STARTING_PAGE_INDEX) null else page
+            LoadResult.Page(response.gifs, prevKey = prevKey, nextKey = nextKey)
+        } catch (exception: IOException) {
+            LoadResult.Error(exception)
+        } catch (exception: HttpException) {
+            LoadResult.Error(exception)
         }
+    }
+
+    companion object {
+        private const val STARTING_PAGE_INDEX = 1
     }
 }

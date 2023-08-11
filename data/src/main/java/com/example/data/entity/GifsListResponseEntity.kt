@@ -58,5 +58,5 @@ data class OriginalEntity(
     @SerializedName("url")
     val url: String,
     @SerializedName("webp")
-    val webp: String,
+    val webp: String?,
 )

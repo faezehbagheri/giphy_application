@@ -35,5 +35,5 @@ data class Images(
 data class Original(
     val mp4: String,
     val url: String,
-    val webp: String,
+    val webp: String?,
 )

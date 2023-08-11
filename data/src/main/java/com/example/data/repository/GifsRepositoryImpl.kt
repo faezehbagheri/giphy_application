@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-const val LIMIT = 15
+const val LIMIT = 30
 
 class GifsRepositoryImpl @Inject constructor(
     private val gifsService: GifsService,
