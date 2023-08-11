@@ -2,6 +2,7 @@ package com.example.features.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.example.domain.usecase.GetTrendingGifsUseCase
 import com.example.features.search.contract.GifsListViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,9 @@ class GifsListViewModel @Inject constructor(
 
     private fun getGifsList() {
         viewModelState.update { state ->
-            state.copy( pagingData = getTrendingGifsUseCase())
+            state.copy(
+                pagingData = getTrendingGifsUseCase().cachedIn(viewModelScope)
+            )
         }
     }
 }
