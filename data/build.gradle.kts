@@ -44,12 +44,9 @@ fun readProperties(propertiesFile: File) = Properties().apply {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":common"))
+    implementation(project(":libraries:common"))
 
     implementation(Libs.AndroidX.core)
-    testImplementation(Libs.Test.junit)
-    androidTestImplementation(Libs.AndroidX.Test.testJunit)
-    androidTestImplementation(Libs.AndroidX.Test.espresso)
     implementation(Libs.AndroidX.appcompat)
 
     ///Hilt
@@ -69,5 +66,9 @@ dependencies {
     ///Pagination
     implementation(Libs.Pagination.paging)
     implementation(Libs.Pagination.pagingCompose)
+
+    ///Test
+    testImplementation(Libs.Test.mockk)
+    testImplementation(Libs.Test.junit)
 
 }

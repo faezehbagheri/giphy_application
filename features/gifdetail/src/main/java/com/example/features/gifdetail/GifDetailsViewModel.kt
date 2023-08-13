@@ -3,9 +3,9 @@ package com.example.features.gifdetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.common.result.GetResult
 import com.example.domain.usecase.GetGifByIdUseCase
 import com.example.features.gifdetail.contract.GifDetailsViewState
+import com.example.libraries.common.result.GetResult
 import com.example.libraries.navigation.DestinationArgs
 import com.example.libraries.utils.coroutines.safeLaunch
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -33,7 +33,6 @@ dependencies {
     implementation(Libs.AndroidX.Compose.foundation)
     testImplementation(Libs.Test.junit)
     androidTestImplementation(Libs.AndroidX.Test.testJunit)
-    androidTestImplementation(Libs.AndroidX.Test.espresso)
     androidTestImplementation(Libs.AndroidX.Compose.uiTestJunit)
     debugImplementation(Libs.AndroidX.Compose.uiTestManifest)
 

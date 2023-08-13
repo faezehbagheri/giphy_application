@@ -2,7 +2,6 @@ object Libs {
     const val androidApplication = "com.android.application:8.0.1"
     const val androidLibrary = "com.android.library:8.0.1"
     const val kotlinAndroid = "org.jetbrains.kotlin.android:1.7.0"
-    const val daggerHilt = "com.google.dagger.hilt.android:2.42"
 
     object AndroidX {
 
@@ -16,30 +15,34 @@ object Libs {
         }
 
         object Compose {
-            private const val version = "1.5.0"
-            private const val compose_ui_version = "1.5.0"
+            private const val compose_version = "1.5.0"
 
-            const val runtime = "androidx.compose.runtime:runtime:$version"
-            const val foundation = "androidx.compose.foundation:foundation:${version}"
+            const val runtime = "androidx.compose.runtime:runtime:$compose_version"
+            const val foundation = "androidx.compose.foundation:foundation:${compose_version}"
 
             const val material = "androidx.compose.material:material:1.2.0"
 
-            const val ui = "androidx.compose.ui:ui:${compose_ui_version}"
-            const val tooling = "androidx.compose.ui:ui-tooling:${compose_ui_version}"
+            const val ui = "androidx.compose.ui:ui:${compose_version}"
+            const val tooling = "androidx.compose.ui:ui-tooling:${compose_version}"
             const val toolingPreview =
-                "androidx.compose.ui:ui-tooling-preview:${compose_ui_version}"
-            const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
-            const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+                "androidx.compose.ui:ui-tooling-preview:${compose_version}"
+            const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:$compose_version"
+            const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+            object Test {
+                const val composeUiTest = "androidx.compose.ui:ui-test-junit4:$compose_version"
+                const val composeTestManifest = "androidx.compose.ui:ui-test-manifest:$compose_version"
+            }
         }
 
         object Test {
             const val testJunit = "androidx.test.ext:junit:1.1.5"
-            const val espresso = "androidx.test.espresso:espresso-core:3.5.1"
         }
     }
 
     object Test {
         const val junit = "junit:junit:4.13.2"
+        const val mockk = "io.mockk:mockk:1.13.5"
     }
 
     object Hilt {

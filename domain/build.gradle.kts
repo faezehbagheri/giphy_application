@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":libraries:common"))
     implementation(Libs.JavaX.inject)
     implementation(Libs.Pagination.pagingCommon)
     testImplementation(Libs.Test.junit)
