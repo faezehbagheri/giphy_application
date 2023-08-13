@@ -30,7 +30,7 @@ dependencies {
     implementation(project(":libraries:designsystem"))
     implementation(project(":libraries:utils"))
     implementation(project(":libraries:navigation"))
-    implementation(project(":common"))
+    implementation(project(":libraries:common"))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.lifecycleRunTime)

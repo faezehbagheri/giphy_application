@@ -1,8 +1,12 @@
-package com.example.features.gifdetail
-
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -20,7 +24,8 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
-import com.example.domain.model.Gif
+import com.example.domain.model.GifDetail
+import com.example.features.gifdetail.GifDetailsViewModel
 import com.example.features.gifdetail.contract.GifDetailsActions
 import com.example.features.gifdetail.contract.GifDetailsViewState
 import com.example.libraries.designsystem.R
@@ -89,9 +94,7 @@ internal fun GifDetailsScaffold(
 }
 
 @Composable
-private fun GifDetails(
-    gif: Gif
-) {
+private fun GifDetails(gif: GifDetail) {
     val imageLoader = ImageLoader.Builder(LocalContext.current)
         .components {
             if (SDK_INT >= 28) {
@@ -103,7 +106,7 @@ private fun GifDetails(
         .build()
 
     Image(
-        painter = rememberAsyncImagePainter(gif.images.original.url, imageLoader),
+        painter = rememberAsyncImagePainter(gif.gif, imageLoader),
         contentDescription = null,
         modifier = Modifier.aspectRatio(1f),
         contentScale = ContentScale.Fit

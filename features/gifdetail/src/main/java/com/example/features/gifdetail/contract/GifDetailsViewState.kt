@@ -1,10 +1,9 @@
 package com.example.features.gifdetail.contract
 
-import com.example.domain.model.Gif
-
+import com.example.domain.model.GifDetail
 
 sealed class GifDetailsViewState {
-    object Loading : GifDetailsViewState()
-    object Error : GifDetailsViewState()
-    data class Result(val gif: Gif) : GifDetailsViewState()
+    data object Loading : GifDetailsViewState()
+    data object Error : GifDetailsViewState()
+    data class Result(val gif: GifDetail) : GifDetailsViewState()
 }

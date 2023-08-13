@@ -1,7 +1,7 @@
 package com.example.data.di
 
-import com.example.data.repository.GifsRepositoryImpl
-import com.example.domain.repository.GifsRepository
+import com.example.data.datasource.GifDataSource
+import com.example.data.datasource.GifDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface RepositoryModule {
+interface DataSourceModule {
 
     @Binds
     @Singleton
-    fun bindGifsRepository(gifsRepositoryImpl: GifsRepositoryImpl): GifsRepository
+    fun bindGifsDataSource(gifDataSourceImpl: GifDataSourceImpl): GifDataSource
 }

@@ -3,14 +3,11 @@ package com.example.data.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.data.entity.GifEntity
-import com.example.data.remote.GifsService
 import com.example.data.repository.LIMIT
 import retrofit2.HttpException
 import java.io.IOException
 
-class GifsPagingSource(
-    private val gifsService: GifsService,
-) : PagingSource<Int, GifEntity>() {
+class GifsPagingSource(private val gifDataSource: GifDataSource) : PagingSource<Int, GifEntity>() {
 
     override fun getRefreshKey(state: PagingState<Int, GifEntity>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -24,16 +21,16 @@ class GifsPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GifEntity> {
         val page = params.key ?: STARTING_PAGE_INDEX
         return try {
-            val response = gifsService.getTrendingGifs(offset = page * LIMIT, limit = LIMIT)
+            val gifs = gifDataSource.getTrendingGifs(offset = page * LIMIT, limit = LIMIT)
             val nextKey = (page + 1).let {
-                if (response.gifs.size < LIMIT || it == params.key) {
+                if (gifs.size < LIMIT || it == params.key) {
                     null
                 } else {
                     it
                 }
             }
             val prevKey = if (page == STARTING_PAGE_INDEX) null else page
-            LoadResult.Page(response.gifs, prevKey = prevKey, nextKey = nextKey)
+            LoadResult.Page(gifs, prevKey = prevKey, nextKey = nextKey)
         } catch (exception: IOException) {
             LoadResult.Error(exception)
         } catch (exception: HttpException) {
