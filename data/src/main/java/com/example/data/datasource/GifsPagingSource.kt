@@ -21,7 +21,7 @@ class GifsPagingSource(private val gifDataSource: GifDataSource) : PagingSource<
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GifEntity> {
         val page = params.key ?: STARTING_PAGE_INDEX
         return try {
-            val gifs = gifDataSource.getTrendingGifs(offset = page * LIMIT, limit = LIMIT)
+            val gifs = gifDataSource.getGifs(offset = page * LIMIT, limit = LIMIT)
             val nextKey = (page + 1).let {
                 if (gifs.size < LIMIT || it == params.key) {
                     null

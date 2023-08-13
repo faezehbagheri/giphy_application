@@ -70,5 +70,5 @@ dependencies {
     ///Test
     testImplementation(Libs.Test.mockk)
     testImplementation(Libs.Test.junit)
-
+    testImplementation(Libs.Test.coroutines)
 }
