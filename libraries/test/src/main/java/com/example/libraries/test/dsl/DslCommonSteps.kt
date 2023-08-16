@@ -1,6 +1,6 @@
-package com.example.test.dsl
+package com.example.libraries.test.dsl
 
-import com.example.test.BaseRobot
+import com.example.libraries.test.BaseRobot
 
 @Suppress("FunctionName")
 fun <T : BaseRobot> TestRun<T>.GIVEN(

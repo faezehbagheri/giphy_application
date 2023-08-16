@@ -1,4 +1,4 @@
-package com.example.test
+package com.example.libraries.test
 
 open class BaseRobot {
     open fun setup() {}

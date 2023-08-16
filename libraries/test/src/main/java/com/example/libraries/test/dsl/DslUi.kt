@@ -1,6 +1,6 @@
-package com.example.test.dsl
+package com.example.libraries.test.dsl
 
-import com.example.test.BaseRobot
+import com.example.libraries.test.BaseRobot
 import java.util.concurrent.TimeUnit
 
 @Suppress("FunctionName")

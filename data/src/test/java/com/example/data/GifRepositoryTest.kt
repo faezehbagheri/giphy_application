@@ -6,21 +6,17 @@ import com.example.data.entity.ImagesEntity
 import com.example.data.entity.OriginalEntity
 import com.example.data.repository.GifsRepositoryImpl
 import com.example.libraries.common.exception.GifNotFountException
-import com.example.libraries.common.result.GetResult
-import com.example.test.BaseRobot
-import com.example.test.dsl.GIVEN
-import com.example.test.dsl.RUN_UNIT_TEST
-import com.example.test.dsl.THEN
-import com.example.test.dsl.WHEN
+import com.example.libraries.test.BaseRobot
+import com.example.libraries.test.dsl.GIVEN
+import com.example.libraries.test.dsl.RUN_UNIT_TEST
+import com.example.libraries.test.dsl.THEN
+import com.example.libraries.test.dsl.WHEN
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 
-@RunWith(RobolectricTestRunner::class)
 class GifRepositoryTest {
 
     private val robot = Robot()
