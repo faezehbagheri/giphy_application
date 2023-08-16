@@ -45,6 +45,7 @@ fun readProperties(propertiesFile: File) = Properties().apply {
 dependencies {
     implementation(project(":domain"))
     implementation(project(":libraries:common"))
+    testImplementation(project(":libraries:test"))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.appcompat)
@@ -71,4 +72,5 @@ dependencies {
     testImplementation(Libs.Test.mockk)
     testImplementation(Libs.Test.junit)
     testImplementation(Libs.Test.coroutines)
+    testImplementation(Libs.Test.robolectric)
 }

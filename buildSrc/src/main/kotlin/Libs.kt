@@ -44,6 +44,7 @@ object Libs {
         const val junit = "junit:junit:4.13.2"
         const val mockk = "io.mockk:mockk:1.13.5"
         const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
+        const val robolectric = "org.robolectric:robolectric:4.10.3"
     }
 
     object Hilt {
