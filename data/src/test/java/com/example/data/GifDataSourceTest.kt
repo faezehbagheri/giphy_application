@@ -19,77 +19,65 @@ import org.junit.Test
 
 class GifDataSourceTest {
 
-    private val gifsService = mockk<GifsService> {
-        coEvery {
-            getTrendingGifs(limit = any(), offset = any())
-        } returns gifResponseEntity
-
-        coEvery {
-            getGifById(id = any())
-        } throws GifNotFountException
-
-        coEvery {
-            getGifById(id = "test")
-        } returns gifResponseEntity
-    }
+    private val gifsService = mockk<GifsService>()
+    private val gifDataSource = GifDataSourceImpl(gifsService)
 
     @Test
-    fun `check getGifs function is called correctly`() = runTest {
-        // Given
-        val datasource: GifDataSource = GifDataSourceImpl(
-            gifService = gifsService,
-            coroutineContext = coroutineContext,
-        )
+    fun `given mock getTrendingGifs, when calling getGifs from gifDataSource, then check the correctness of the result`() =
+        runTest {
+            ///Given
+            coEvery {
+                gifsService.getTrendingGifs(
+                    limit = any(),
+                    offset = any()
+                )
+            } answers { gifResponseEntity }
 
-        // When
-        val gifs = datasource.getGifs(offset = 0, limit = 10)
+            ///When
+            val gifs = gifDataSource.getGifs(offset = 0, limit = 10)
 
-        // Then
-        coVerify(exactly = 1) { gifsService.getTrendingGifs(offset = any(), limit = any()) }
-        assertTrue(gifs.isNotEmpty())
-    }
-
-    @Test
-    fun `given current gif id then check getGifDetail function is called correctly`() = runTest {
-        // Given
-        val datasource: GifDataSource = GifDataSourceImpl(
-            gifService = gifsService,
-            coroutineContext = coroutineContext,
-        )
-
-        // When
-        var isExceptionThrown = false
-        try {
-            datasource.getGifDetail(id = "test")
-        } catch (e: GifNotFountException) {
-            isExceptionThrown = true
+            ///Then
+            coVerify(exactly = 1) { gifsService.getTrendingGifs(any(), any()) }
+            assertTrue(gifs.isNotEmpty())
         }
 
-        // Then
-        assertTrue(isExceptionThrown.not())
-        coVerify(exactly = 1) { gifsService.getGifById(id = any()) }
-    }
-
     @Test
-    fun `given incorrect gif id then check getGifDetail function throws an exception`() = runTest {
-        // Given
-        val datasource: GifDataSource = GifDataSourceImpl(
-            gifService = gifsService,
-            coroutineContext = coroutineContext,
-        )
+    fun `given mock getGifById, when calling getGifDetail from gifDataSource, then check the correctness of the result`() =
+        runTest {
+            ///Given
+            coEvery { gifsService.getGifById("test") } answers { gifResponseEntity }
 
-        // When
-        var isExceptionThrown = false
-        try {
-            datasource.getGifDetail(id = "incorrect_id")
-        } catch (e: GifNotFountException) {
-            isExceptionThrown = true
+            ///When
+            var isExceptionThrown = false
+            try {
+                gifDataSource.getGifDetail(id = "test")
+            } catch (e: GifNotFountException) {
+                isExceptionThrown = true
+            }
+
+            ///Then
+            coVerify(exactly = 1) { gifsService.getGifById(any()) }
+            assertTrue(isExceptionThrown.not())
         }
 
-        // Then
-        assertTrue(isExceptionThrown)
-        coVerify(exactly = 1) { gifsService.getGifById(id = any()) }
-    }
+    @Test
+    fun `given mock getGifById, when calling getGifDetail from gifDataSource, then throws an exception`() =
+        runTest {
+            ///Given
+            coEvery { gifsService.getGifById(any()) } throws GifNotFountException
+
+            ///When
+            var isExceptionThrown = false
+            try {
+                gifDataSource.getGifDetail(id = "incorrect_id")
+            } catch (e: GifNotFountException) {
+                isExceptionThrown = true
+            }
+
+            ///Then
+            coVerify(exactly = 1) { gifsService.getGifById(any()) }
+            assertTrue(isExceptionThrown)
+        }
 
     companion object {
         val gifResponseEntity = GifResponseEntity(

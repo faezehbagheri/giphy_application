@@ -5,89 +5,77 @@ import com.example.data.entity.GifEntity
 import com.example.data.entity.ImagesEntity
 import com.example.data.entity.OriginalEntity
 import com.example.data.repository.GifsRepositoryImpl
+import com.example.domain.model.GifDetail
 import com.example.libraries.common.exception.GifNotFountException
-import com.example.libraries.test.BaseRobot
-import com.example.libraries.test.dsl.GIVEN
-import com.example.libraries.test.dsl.RUN_UNIT_TEST
-import com.example.libraries.test.dsl.THEN
-import com.example.libraries.test.dsl.WHEN
+import com.example.libraries.common.result.GetResult
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class GifRepositoryTest {
 
-    private val robot = Robot()
+    private val gifDataSource: GifDataSource = mockk()
+    private val gifsRepository = GifsRepositoryImpl(gifDataSource)
 
     @Test
-    fun test_successful_getUserDetail() {
-        RUN_UNIT_TEST(robot) {
-            GIVEN { mockSuccessfulGetGifDetail() }
-            WHEN { callGetGifDetail() }
-            THEN { checkUserDetailSuccessfulResult() }
-        }
-    }
+    fun `given mock successfulGetGifDetail, when calling getGifDetail in gifsRepository, then check the correctness of the result`() =
+        runTest {
+            ///Given
+            coEvery { gifDataSource.getGifDetail(any()) } answers { gifEntity }
 
-    @Test
-    fun test_failure_getUserDetail() {
-        RUN_UNIT_TEST(robot) {
-            GIVEN { mockFailureGetGifDetail() }
-            WHEN { callGetGifDetail() }
-            THEN { checkUserDetailFailureResult() }
-        }
-    }
-
-    private class Robot : BaseRobot() {
-
-        private val gifDataSource: GifDataSource = mockk()
-        private val gifsRepository = GifsRepositoryImpl(gifDataSource)
-        private lateinit var getGifsList: List<GifEntity>
-        private var gifNotFountException: GifNotFountException? = null
-
-        fun mockSuccessfulGetGifDetail() {
-            coEvery { gifDataSource.getGifDetail(any()) } answers {
-                GifEntity(
-                    id = "id",
-                    images = ImagesEntity(
-                        original = OriginalEntity(
-                            mp4 = "",
-                            url = "",
-                            webp = null,
-                        )
-                    ),
-                    rating = "A",
-                    title = "title",
-                    type = "type",
-                    url = "url",
-                    username = "username",
-                )
-            }
-        }
-
-        fun mockFailureGetGifDetail() {
-            coEvery { gifDataSource.getGifDetail(any()) } throws GifNotFountException
-        }
-
-        fun callGetGifDetail() = runBlocking {
-            try {
-                gifsRepository.getGifById("id").collect{
-//                    if(it == GetResult.Success){
-//                        getGifsList.data
-//                    }
+            ///When
+            var gifDetail: GifDetail? = null
+            gifsRepository.getGifById("id").collect {
+                when (it) {
+                    is GetResult.Success -> gifDetail = it.data
+                    else -> {}
                 }
-            } catch (e: GifNotFountException) {
-                gifNotFountException = e
             }
+
+            ///Then
+            assertTrue(gifDetail != null)
+            coVerify(exactly = 1) { gifDataSource.getGifDetail(any()) }
+
         }
 
-        fun checkUserDetailSuccessfulResult() {
-            assertTrue(getGifsList.isNotEmpty())
+    @Test
+    fun `given mock failureGetGifDetail, when calling getGifDetail in gifsRepository, then throws a GifsNotFoundException`() =
+        runTest {
+            ///Given
+            coEvery { gifDataSource.getGifDetail(any()) } throws GifNotFountException
+
+            ///When
+            var exception: Throwable? = null
+            gifsRepository.getGifById("").collect {
+                when (it) {
+                    is GetResult.Error -> exception = it.throwable
+                    else -> {}
+                }
+            }
+
+            ///Then
+            assertTrue(exception is GifNotFountException)
         }
 
-        fun checkUserDetailFailureResult() = runBlocking {
-            assertTrue(gifNotFountException != null)
-        }
+
+    companion object {
+        val gifEntity = GifEntity(
+            id = "id",
+            images = ImagesEntity(
+                original = OriginalEntity(
+                    mp4 = "",
+                    url = "",
+                    webp = null,
+                )
+            ),
+            rating = "A",
+            title = "title",
+            type = "type",
+            url = "url",
+            username = "username",
+        )
     }
 }
