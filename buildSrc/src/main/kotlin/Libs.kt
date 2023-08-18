@@ -69,9 +69,10 @@ object Libs {
     }
 
     object Okhttp {
-        const val okhttp = "com.squareup.okhttp3:okhttp:4.9.3"
-        const val interceptor = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
-        const val mockWebServer = "com.squareup.okhttp3:mockwebserver:4.9.3"
+        private const val version = "4.11.0"
+        const val okhttp = "com.squareup.okhttp3:okhttp:$version"
+        const val interceptor = "com.squareup.okhttp3:logging-interceptor:$version"
+        const val mockWebServer = "com.squareup.okhttp3:mockwebserver:$version"
     }
 
     object Gson {

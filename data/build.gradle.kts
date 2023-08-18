@@ -34,6 +34,12 @@ android {
         buildConfigField("String", "API_KEY", projectProperties["MY_KEY"] as String)
         buildConfigField("String", "BASE_URL", projectProperties["BASE_URL"] as String)
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 fun readProperties(propertiesFile: File) = Properties().apply {
