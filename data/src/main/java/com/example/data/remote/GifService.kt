@@ -5,7 +5,7 @@ import com.example.data.entity.GifResponseEntity
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface GifsService {
+interface GifService {
     @GET("gifs/trending")
     suspend fun getTrendingGifs(
         @Query("limit")

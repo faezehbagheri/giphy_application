@@ -57,8 +57,8 @@ dependencies {
     ///Retrofit
     implementation(Libs.Retrofit.retrofit)
     implementation(Libs.Retrofit.converterGson)
-    implementation(Libs.Retrofit.okhttp)
-    implementation(Libs.Retrofit.interceptor)
+    implementation(Libs.Okhttp.okhttp)
+    implementation(Libs.Okhttp.interceptor)
 
     // Parcelize
     implementation(Libs.Parcelize.parcelize)
@@ -71,5 +71,9 @@ dependencies {
     testImplementation(Libs.Test.mockk)
     testImplementation(Libs.Test.junit)
     testImplementation(Libs.Test.coroutines)
+    testImplementation(Libs.Okhttp.mockWebServer)
+    testImplementation(Libs.Hilt.Test.hiltTest)
+    testImplementation(Libs.Test.robolectric)
+    kaptTest(Libs.Hilt.hiltCompiler)
     testImplementation(project(":libraries:test"))
 }

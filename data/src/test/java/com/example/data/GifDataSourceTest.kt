@@ -1,6 +1,5 @@
 package com.example.data
 
-import com.example.data.datasource.GifDataSource
 import com.example.data.datasource.GifDataSourceImpl
 import com.example.data.entity.GifEntity
 import com.example.data.entity.GifResponseEntity
@@ -8,7 +7,7 @@ import com.example.data.entity.ImagesEntity
 import com.example.data.entity.MetaEntity
 import com.example.data.entity.OriginalEntity
 import com.example.data.entity.PaginationEntity
-import com.example.data.remote.GifsService
+import com.example.data.remote.GifService
 import com.example.libraries.common.exception.GifNotFountException
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -19,15 +18,15 @@ import org.junit.Test
 
 class GifDataSourceTest {
 
-    private val gifsService = mockk<GifsService>()
-    private val gifDataSource = GifDataSourceImpl(gifsService)
+    private val gifService = mockk<GifService>()
+    private val gifDataSource = GifDataSourceImpl(gifService)
 
     @Test
     fun `given mock getTrendingGifs, when calling getGifs from gifDataSource, then check the correctness of the result`() =
         runTest {
             ///Given
             coEvery {
-                gifsService.getTrendingGifs(
+                gifService.getTrendingGifs(
                     limit = any(),
                     offset = any()
                 )
@@ -37,7 +36,7 @@ class GifDataSourceTest {
             val gifs = gifDataSource.getGifs(offset = 0, limit = 10)
 
             ///Then
-            coVerify(exactly = 1) { gifsService.getTrendingGifs(any(), any()) }
+            coVerify(exactly = 1) { gifService.getTrendingGifs(any(), any()) }
             assertTrue(gifs.isNotEmpty())
         }
 
@@ -45,7 +44,7 @@ class GifDataSourceTest {
     fun `given mock getGifById, when calling getGifDetail from gifDataSource, then check the correctness of the result`() =
         runTest {
             ///Given
-            coEvery { gifsService.getGifById("test") } answers { gifResponseEntity }
+            coEvery { gifService.getGifById("test") } answers { gifResponseEntity }
 
             ///When
             var isExceptionThrown = false
@@ -56,7 +55,7 @@ class GifDataSourceTest {
             }
 
             ///Then
-            coVerify(exactly = 1) { gifsService.getGifById(any()) }
+            coVerify(exactly = 1) { gifService.getGifById(any()) }
             assertTrue(isExceptionThrown.not())
         }
 
@@ -64,7 +63,7 @@ class GifDataSourceTest {
     fun `given mock getGifById, when calling getGifDetail from gifDataSource, then throws an exception`() =
         runTest {
             ///Given
-            coEvery { gifsService.getGifById(any()) } throws GifNotFountException
+            coEvery { gifService.getGifById(any()) } throws GifNotFountException
 
             ///When
             var isExceptionThrown = false
@@ -75,7 +74,7 @@ class GifDataSourceTest {
             }
 
             ///Then
-            coVerify(exactly = 1) { gifsService.getGifById(any()) }
+            coVerify(exactly = 1) { gifService.getGifById(any()) }
             assertTrue(isExceptionThrown)
         }
 

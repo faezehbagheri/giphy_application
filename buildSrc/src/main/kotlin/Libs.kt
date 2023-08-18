@@ -31,7 +31,8 @@ object Libs {
 
             object Test {
                 const val composeUiTest = "androidx.compose.ui:ui-test-junit4:$compose_version"
-                const val composeTestManifest = "androidx.compose.ui:ui-test-manifest:$compose_version"
+                const val composeTestManifest =
+                    "androidx.compose.ui:ui-test-manifest:$compose_version"
             }
         }
 
@@ -52,6 +53,10 @@ object Libs {
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
         const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
+
+        object Test {
+            const val hiltTest = "com.google.dagger:hilt-android-testing:$version"
+        }
     }
 
     object JavaX {
@@ -61,8 +66,12 @@ object Libs {
     object Retrofit {
         const val retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
         const val converterGson = "com.squareup.retrofit2:converter-gson:2.9.0"
+    }
+
+    object Okhttp {
         const val okhttp = "com.squareup.okhttp3:okhttp:4.9.3"
         const val interceptor = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
+        const val mockWebServer = "com.squareup.okhttp3:mockwebserver:4.9.3"
     }
 
     object Gson {

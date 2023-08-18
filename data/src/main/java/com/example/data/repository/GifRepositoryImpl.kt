@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.map
 import com.example.data.datasource.GifDataSource
-import com.example.data.datasource.GifsPagingSource
+import com.example.data.datasource.GifPagingSource
 import com.example.domain.model.GifDetail
 import com.example.domain.repository.GifsRepository
 import com.example.libraries.common.result.GetResult
@@ -27,7 +27,7 @@ class GifsRepositoryImpl @Inject constructor(
             pageSize = LIMIT,
         ),
         pagingSourceFactory = {
-            GifsPagingSource(gifDataSource)
+            GifPagingSource(gifDataSource)
         }
     ).flow.map { it.map { data -> data.toDomainGif() } }
 

@@ -18,5 +18,6 @@ android {
 
 dependencies {
     testImplementation(Libs.Test.junit)
+    implementation(Libs.Okhttp.mockWebServer)
     androidTestImplementation(Libs.AndroidX.Test.testJunit)
 }

@@ -7,7 +7,7 @@ import com.example.data.repository.LIMIT
 import retrofit2.HttpException
 import java.io.IOException
 
-class GifsPagingSource(private val gifDataSource: GifDataSource) : PagingSource<Int, GifEntity>() {
+class GifPagingSource(private val gifDataSource: GifDataSource) : PagingSource<Int, GifEntity>() {
 
     override fun getRefreshKey(state: PagingState<Int, GifEntity>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
