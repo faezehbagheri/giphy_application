@@ -8,58 +8,39 @@ import com.example.data.repository.GifsRepositoryImpl
 import com.example.domain.model.GifDetail
 import com.example.libraries.common.exception.GifNotFountException
 import com.example.libraries.common.result.GetResult
+import com.example.libraries.test.BaseRobot
+import com.example.libraries.test.dsl.GIVEN
+import com.example.libraries.test.dsl.RUN_UNIT_TEST
+import com.example.libraries.test.dsl.THEN
+import com.example.libraries.test.dsl.WHEN
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class GifRepositoryTest {
 
-    private val gifDataSource: GifDataSource = mockk()
-    private val gifsRepository = GifsRepositoryImpl(gifDataSource)
+    private val robot = Robot()
 
     @Test
-    fun `given mock successfulGetGifDetail, when calling getGifDetail in gifsRepository, then check the correctness of the result`() =
-        runTest {
-            ///Given
-            coEvery { gifDataSource.getGifDetail(any()) } answers { gifEntity }
-
-            ///When
-            var gifDetail: GifDetail? = null
-            gifsRepository.getGifById("id").collect {
-                when (it) {
-                    is GetResult.Success -> gifDetail = it.data
-                    else -> {}
-                }
-            }
-
-            ///Then
-            assertTrue(gifDetail != null)
-            coVerify(exactly = 1) { gifDataSource.getGifDetail(any()) }
-
+    fun test_successful_getGifDetail() = runTest {
+        RUN_UNIT_TEST(robot) {
+            GIVEN { mockSuccessfulGetGifDetail() }
+            WHEN { callingGetGifDetail() }
+            THEN { checkGifDetailSuccessfulResult() }
         }
+    }
 
     @Test
-    fun `given mock failureGetGifDetail, when calling getGifDetail in gifsRepository, then throws a GifsNotFoundException`() =
-        runTest {
-            ///Given
-            coEvery { gifDataSource.getGifDetail(any()) } throws GifNotFountException
-
-            ///When
-            var exception: Throwable? = null
-            gifsRepository.getGifById("").collect {
-                when (it) {
-                    is GetResult.Error -> exception = it.throwable
-                    else -> {}
-                }
-            }
-
-            ///Then
-            assertTrue(exception is GifNotFountException)
+    fun test_failure_getGifDetail() = runTest {
+        RUN_UNIT_TEST(robot) {
+            GIVEN { mockFailureGetGifDetail() }
+            WHEN { callingGetGifDetail() }
+            THEN { checkGifDetailFailureResult() }
         }
-
+    }
 
     companion object {
         val gifEntity = GifEntity(
@@ -77,5 +58,41 @@ class GifRepositoryTest {
             url = "url",
             username = "username",
         )
+    }
+
+    class Robot : BaseRobot() {
+        private val gifDataSource: GifDataSource = mockk()
+        private val gifsRepository = GifsRepositoryImpl(gifDataSource)
+        private lateinit var gifDetail: GifDetail
+        private var exception: Throwable? = null
+
+        fun mockSuccessfulGetGifDetail() = runTest {
+            coEvery { gifDataSource.getGifDetail(any()) } answers { gifEntity }
+        }
+
+        fun mockFailureGetGifDetail() = runTest {
+            coEvery { gifDataSource.getGifDetail(any()) } throws GifNotFountException
+        }
+
+        fun callingGetGifDetail() = runTest {
+            gifsRepository.getGifById("id").collect {
+                when (it) {
+                    is GetResult.Success -> gifDetail = it.data
+                    is GetResult.Error -> exception = it.throwable
+                    else -> {}
+                }
+            }
+        }
+
+        fun checkGifDetailSuccessfulResult() {
+            assertEquals("id", gifDetail.id)
+            assertEquals("title", gifDetail.title)
+            assertEquals("username", gifDetail.username)
+            assertEquals("A", gifDetail.rating)
+        }
+
+        fun checkGifDetailFailureResult() {
+            assertTrue(exception is GifNotFountException)
+        }
     }
 }

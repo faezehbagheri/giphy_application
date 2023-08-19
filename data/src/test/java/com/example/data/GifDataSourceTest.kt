@@ -84,7 +84,7 @@ class GifDataSourceTest {
         )
     }
 
-    class Robot() : BaseRobot() {
+    class Robot : BaseRobot() {
         private val gifService = mockk<GifService>()
         private val gifDataSource = GifDataSourceImpl(gifService)
         private lateinit var gifsList: List<GifEntity>
