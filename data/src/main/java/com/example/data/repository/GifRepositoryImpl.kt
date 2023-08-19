@@ -2,13 +2,15 @@ package com.example.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.map
 import com.example.data.datasource.GifDataSource
-import com.example.data.datasource.GifPagingSource
+import com.example.domain.model.Gif
 import com.example.domain.model.GifDetail
 import com.example.domain.repository.GifsRepository
 import com.example.libraries.common.result.GetResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -22,13 +24,12 @@ class GifsRepositoryImpl @Inject constructor(
     private val gifDataSource: GifDataSource,
     private val coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : GifsRepository {
-    override fun getTrendingGifs() = Pager(
+    override fun getTrendingGifs(): Flow<PagingData<Gif>> = Pager(
         config = PagingConfig(
             pageSize = LIMIT,
+            initialLoadSize = LIMIT,
         ),
-        pagingSourceFactory = {
-            GifPagingSource(gifDataSource)
-        }
+        pagingSourceFactory = { gifDataSource.getGifs() }
     ).flow.map { it.map { data -> data.toDomainGif() } }
 
     override fun getGifById(id: String) = flow<GetResult<GifDetail>> {

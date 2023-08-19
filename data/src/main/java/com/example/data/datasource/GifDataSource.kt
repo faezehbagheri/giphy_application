@@ -1,5 +1,6 @@
 package com.example.data.datasource
 
+import androidx.paging.PagingSource
 import com.example.data.entity.GifEntity
 import com.example.data.remote.GifService
 import com.example.libraries.common.exception.GifNotFountException
@@ -9,25 +10,18 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 interface GifDataSource {
-    suspend fun getGifs(offset: Int, limit: Int): List<GifEntity>
+    fun getGifs(): PagingSource<Int, GifEntity>
     suspend fun getGifDetail(id: String): GifEntity
 }
 
 class GifDataSourceImpl @Inject constructor(
     private val gifService: GifService,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : GifDataSource {
-    override suspend fun getGifs(offset: Int, limit: Int): List<GifEntity> = withContext(
-        context = coroutineContext,
-    ) {
-        val response = gifService.getTrendingGifs(offset, limit)
-        return@withContext response.gifs
-    }
+    override fun getGifs(): PagingSource<Int, GifEntity> =
+        GifPagingSource(gifService = gifService)
 
-    override suspend fun getGifDetail(id: String): GifEntity = withContext(
-        context = coroutineContext,
-    ) {
+    override suspend fun getGifDetail(id: String): GifEntity {
         val response = gifService.getGifDetail(id)
-        return@withContext response.gifs.firstOrNull() ?: throw GifNotFountException
+        return response.gifs.firstOrNull() ?: throw GifNotFountException
     }
 }

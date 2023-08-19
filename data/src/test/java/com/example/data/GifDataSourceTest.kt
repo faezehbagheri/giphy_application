@@ -26,15 +26,6 @@ class GifDataSourceTest {
     private val robot = Robot()
 
     @Test
-    fun test_successful_getGifs() {
-        RUN_UNIT_TEST(robot) {
-            GIVEN { mockSuccessfulGetTrendingGifs() }
-            WHEN { callingGetGifs() }
-            THEN { checkGifsListSuccessfulResult() }
-        }
-    }
-
-    @Test
     fun test_successful_getGifDetail() {
         RUN_UNIT_TEST(robot) {
             GIVEN { mockSuccessfulGetGifDetail() }
@@ -87,15 +78,8 @@ class GifDataSourceTest {
     class Robot : BaseRobot() {
         private val gifService = mockk<GifService>()
         private val gifDataSource = GifDataSourceImpl(gifService)
-        private lateinit var gifsList: List<GifEntity>
         private lateinit var gifDetail: GifEntity
         private lateinit var isExceptionThrown: Exception
-
-        fun mockSuccessfulGetTrendingGifs() {
-            coEvery {
-                gifService.getTrendingGifs(limit = any(), offset = any())
-            } answers { gifResponseEntity }
-        }
 
         fun mockSuccessfulGetGifDetail() {
             coEvery { gifService.getGifDetail("id") } answers { gifResponseEntity }
@@ -105,20 +89,12 @@ class GifDataSourceTest {
             coEvery { gifService.getGifDetail(any()) } throws GifNotFountException
         }
 
-        fun callingGetGifs() = runTest {
-            gifsList = gifDataSource.getGifs(offset = 0, limit = 10)
-        }
-
         fun callingGetGifDetail() = runTest {
             try {
                 gifDetail = gifDataSource.getGifDetail(id = "id")
             } catch (e: GifNotFountException) {
                 isExceptionThrown = e
             }
-        }
-
-        fun checkGifsListSuccessfulResult() {
-            assertTrue(gifsList.isNotEmpty())
         }
 
         fun checkGifDetailSuccessfulResult() {
