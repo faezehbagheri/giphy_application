@@ -17,7 +17,7 @@ interface GifService {
     ): GifResponseEntity
 
     @GET("gifs")
-    suspend fun getGifById(
+    suspend fun getGifDetail(
         @Query("ids")
         id: String,
         @Query("api_key")

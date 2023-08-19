@@ -27,7 +27,7 @@ class GifDataSourceImpl @Inject constructor(
     override suspend fun getGifDetail(id: String): GifEntity = withContext(
         context = coroutineContext,
     ) {
-        val response = gifService.getGifById(id)
+        val response = gifService.getGifDetail(id)
         return@withContext response.gifs.firstOrNull() ?: throw GifNotFountException
     }
 }
