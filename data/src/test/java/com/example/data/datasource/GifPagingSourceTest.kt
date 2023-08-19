@@ -1,7 +1,6 @@
-package com.example.data
+package com.example.data.datasource
 
 import androidx.paging.PagingSource
-import com.example.data.datasource.GifDataSource
 import com.example.data.entity.GifEntity
 import com.example.libraries.test.BaseRobot
 import com.example.libraries.test.dsl.AND

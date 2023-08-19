@@ -1,6 +1,5 @@
-package com.example.data
+package com.example.data.datasource
 
-import com.example.data.datasource.GifDataSourceImpl
 import com.example.data.entity.GifEntity
 import com.example.data.entity.GifResponseEntity
 import com.example.data.entity.ImagesEntity

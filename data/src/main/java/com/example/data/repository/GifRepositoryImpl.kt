@@ -5,6 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.example.data.datasource.GifDataSource
+import com.example.data.mapper.toDomainGif
+import com.example.data.mapper.toDomainGifDetail
 import com.example.domain.model.Gif
 import com.example.domain.model.GifDetail
 import com.example.domain.repository.GifsRepository

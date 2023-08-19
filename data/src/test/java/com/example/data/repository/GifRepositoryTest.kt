@@ -1,10 +1,9 @@
-package com.example.data
+package com.example.data.repository
 
 import com.example.data.datasource.GifDataSource
 import com.example.data.entity.GifEntity
 import com.example.data.entity.ImagesEntity
 import com.example.data.entity.OriginalEntity
-import com.example.data.repository.GifsRepositoryImpl
 import com.example.domain.model.GifDetail
 import com.example.libraries.common.exception.GifNotFountException
 import com.example.libraries.common.result.GetResult
