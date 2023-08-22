@@ -26,8 +26,6 @@ object Libs {
             const val tooling = "androidx.compose.ui:ui-tooling:${compose_version}"
             const val toolingPreview =
                 "androidx.compose.ui:ui-tooling-preview:${compose_version}"
-            const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:$compose_version"
-            const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:$compose_version"
 
             object Test {
                 const val composeUiTest = "androidx.compose.ui:ui-test-junit4:$compose_version"

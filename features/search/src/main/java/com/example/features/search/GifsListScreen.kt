@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -22,7 +23,6 @@ import com.example.domain.model.Gif
 import com.example.features.search.contract.GifsListActions
 import com.example.features.search.contract.GifsListViewState
 import com.example.libraries.designsystem.composable.ErrorStateView
-import com.example.libraries.designsystem.composable.InitialStateView
 import com.example.libraries.designsystem.composable.LoadingStateView
 import com.example.libraries.designsystem.composable.TopBar
 
@@ -76,20 +76,26 @@ private fun MainContent(
 ) {
     val refreshLoadState = lazyPagingItems?.loadState?.refresh
 
-    if (lazyPagingItems == null) {
-        InitialStateView()
-    } else if (refreshLoadState is LoadState.Loading) {
-        LoadingStateView()
-    } else if (refreshLoadState is LoadState.Error) {
-        ErrorStateView(
-            onRetry = { lazyPagingItems.retry() },
-        )
-    } else {
-        GifsList(
-            modifier = modifier,
-            lazyPagingItems = lazyPagingItems,
-            onNavigateToGifsDetails = onNavigateToGifsDetails
-        )
+    lazyPagingItems?.let {
+        when (refreshLoadState) {
+            is LoadState.Loading -> {
+                LoadingStateView()
+            }
+
+            is LoadState.Error -> {
+                ErrorStateView(
+                    onRetry = { lazyPagingItems.retry() },
+                )
+            }
+
+            else -> {
+                GifsList(
+                    modifier = modifier,
+                    lazyPagingItems = lazyPagingItems,
+                    onNavigateToGifsDetails = onNavigateToGifsDetails
+                )
+            }
+        }
     }
 }
 
@@ -100,7 +106,7 @@ private fun GifsList(
     onNavigateToGifsDetails: (String) -> Unit
 ) {
     LazyVerticalGrid(
-        modifier = modifier,
+        modifier = modifier.testTag("gifsList"),
         columns = GridCells.Fixed(2),
     ) {
         items(count = lazyPagingItems.itemCount) { index ->
@@ -123,6 +129,7 @@ private fun GifItem(
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .aspectRatio(1f)
+            .testTag(gif.id)
             .clickable {
                 onNavigateToGifsDetails(gif.id)
             }

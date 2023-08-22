@@ -23,6 +23,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -30,6 +36,7 @@ dependencies {
     implementation(project(":libraries:designsystem"))
     implementation(project(":libraries:utils"))
     implementation(project(":libraries:common"))
+    implementation(project(":libraries:test"))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.lifecycleRunTime)
@@ -37,7 +44,6 @@ dependencies {
     implementation(Libs.AndroidX.Compose.toolingPreview)
     debugImplementation(Libs.AndroidX.Compose.tooling)
     implementation(Libs.AndroidX.Compose.material)
-    testImplementation(Libs.Test.junit)
 
     ///Hilt
     implementation(Libs.Hilt.hilt)
@@ -58,4 +64,9 @@ dependencies {
     implementation(Libs.Pagination.paging)
     implementation(Libs.Pagination.pagingCompose)
 
+    ///Test
+    testImplementation(Libs.Test.junit)
+    testImplementation(Libs.AndroidX.Compose.Test.composeUiTest)
+    testImplementation(Libs.Test.robolectric)
+    testImplementation(Libs.Test.mockk)
 }

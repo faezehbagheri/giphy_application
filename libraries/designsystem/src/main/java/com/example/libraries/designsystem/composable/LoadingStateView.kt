@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.libraries.designsystem.R
@@ -19,6 +20,7 @@ fun LoadingStateView(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .testTag("loadingStateView")
             .background(colorResource(id = R.color.background)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
