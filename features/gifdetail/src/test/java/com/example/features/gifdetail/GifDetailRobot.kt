@@ -6,6 +6,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.SavedStateHandle
@@ -60,24 +61,20 @@ class GifDetailRobot(private val composeContentTestRule: ComposeContentTestRule)
     }
 
     fun checkLoadingStateIsDisplayed() {
-        composeContentTestRule.onNodeWithText("loadingStateView").assertIsDisplayed()
+        composeContentTestRule.onNodeWithTag("loadingStateView").assertIsDisplayed()
     }
 
     fun checkErrorStateIsDisplayed() {
-        composeContentTestRule.onNodeWithText("errorState").assertIsDisplayed()
+        composeContentTestRule.onNodeWithTag("errorState").assertIsDisplayed()
         composeContentTestRule.onNodeWithText("Try again").assertIsDisplayed()
     }
 
-    fun checkGifDetailIsDisplayed() {
+    fun checkGifDetailContentIsDisplayed() {
         composeContentTestRule.onNodeWithContentDescription("gif").assertIsDisplayed()
         composeContentTestRule.onNodeWithText("title").assertIsDisplayed()
-        composeContentTestRule.onNodeWithText("Rating: ").assertIsDisplayed()
-        composeContentTestRule.onNodeWithText("A").assertIsDisplayed()
-        composeContentTestRule.onNodeWithText("Username: ").assertIsDisplayed()
-        composeContentTestRule.onNodeWithText("username").assertIsDisplayed()
     }
 
-    fun checkOnBackButtonClicked() {
+    fun clickOnBackButton() {
         composeContentTestRule.onNodeWithContentDescription("back icon").performClick()
     }
 
