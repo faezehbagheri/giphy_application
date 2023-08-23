@@ -31,6 +31,7 @@ dependencies {
     implementation(project(":libraries:utils"))
     implementation(project(":libraries:navigation"))
     implementation(project(":libraries:common"))
+    implementation(project(":libraries:test"))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.lifecycleRunTime)
@@ -58,5 +59,11 @@ dependencies {
     ///Pagination
     implementation(Libs.Pagination.paging)
     implementation(Libs.Pagination.pagingCompose)
+
+    ///Test
+    testImplementation(Libs.Test.junit)
+    testImplementation(Libs.AndroidX.Compose.Test.composeUiTest)
+    testImplementation(Libs.Test.robolectric)
+    testImplementation(Libs.Test.mockk)
 
 }

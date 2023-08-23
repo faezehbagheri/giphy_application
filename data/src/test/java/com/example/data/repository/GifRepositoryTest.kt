@@ -74,7 +74,7 @@ class GifRepositoryTest {
         }
 
         fun callingGetGifDetail() = runTest {
-            gifsRepository.getGifById("id").collect {
+            gifsRepository.getGifDetail("id").collect {
                 when (it) {
                     is GetResult.Success -> gifDetail = it.data
                     is GetResult.Error -> exception = it.throwable

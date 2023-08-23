@@ -36,7 +36,7 @@ fun TopBar(
                 IconButton(onClick = onNavigateUp) {
                     Image(
                         painter = painterResource(id = R.drawable.arrow_forward),
-                        contentDescription = null
+                        contentDescription = "back icon"
                     )
                 }
             }

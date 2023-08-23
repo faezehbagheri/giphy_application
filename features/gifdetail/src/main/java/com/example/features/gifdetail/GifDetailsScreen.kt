@@ -31,6 +31,7 @@ import com.example.features.gifdetail.contract.GifDetailsViewState
 import com.example.libraries.designsystem.R
 import com.example.libraries.designsystem.composable.ErrorStateView
 import com.example.libraries.designsystem.composable.LoadingStateView
+import com.example.libraries.designsystem.composable.TopBar
 
 @Composable
 fun GifDetailsScreen(
@@ -65,7 +66,7 @@ internal fun GifDetailsScaffold(
 ) {
     Scaffold(
         topBar = {
-            com.example.libraries.designsystem.composable.TopBar(
+            TopBar(
                 withBackButton = true,
                 onNavigateUp = actions.navigateUp,
             )
@@ -107,7 +108,7 @@ private fun GifDetails(gif: GifDetail) {
 
     Image(
         painter = rememberAsyncImagePainter(gif.gif, imageLoader),
-        contentDescription = null,
+        contentDescription = "gif",
         modifier = Modifier.aspectRatio(1f),
         contentScale = ContentScale.Fit
     )

@@ -34,7 +34,7 @@ class GifsRepositoryImpl @Inject constructor(
         pagingSourceFactory = { gifDataSource.getGifs() }
     ).flow.map { it.map { data -> data.toDomainGif() } }
 
-    override fun getGifById(id: String) = flow<GetResult<GifDetail>> {
+    override fun getGifDetail(id: String) = flow<GetResult<GifDetail>> {
         val gif = gifDataSource.getGifDetail(id).toDomainGifDetail()
         emit(GetResult.Success(gif))
     }.catch {
