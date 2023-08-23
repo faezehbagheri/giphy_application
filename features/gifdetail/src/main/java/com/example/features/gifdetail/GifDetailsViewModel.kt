@@ -11,6 +11,7 @@ import com.example.libraries.utils.coroutines.safeLaunch
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -37,7 +38,7 @@ class GifDetailsViewModel @Inject constructor(
     }
 
     private fun getGifDetails() = safeLaunch {
-        getGifByIdUseCase(gifId).collect { result ->
+        getGifByIdUseCase(gifId).collectLatest { result ->
             val state = when (result) {
                 is GetResult.Error -> GifDetailsViewState.Error
                 is GetResult.Loading -> GifDetailsViewState.Loading
