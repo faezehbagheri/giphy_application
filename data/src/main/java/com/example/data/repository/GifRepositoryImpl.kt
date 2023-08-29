@@ -24,7 +24,6 @@ const val LIMIT = 30
 
 class GifsRepositoryImpl @Inject constructor(
     private val gifDataSource: GifDataSource,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : GifsRepository {
     override fun getTrendingGifs(): Flow<PagingData<Gif>> = Pager(
         config = PagingConfig(
@@ -39,6 +38,6 @@ class GifsRepositoryImpl @Inject constructor(
         emit(GetResult.Success(gif))
     }.catch {
         emit(GetResult.Error(it))
-    }.flowOn(coroutineContext)
+    }.flowOn(Dispatchers.IO)
 
 }
