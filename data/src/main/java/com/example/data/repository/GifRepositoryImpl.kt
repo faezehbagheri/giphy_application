@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -35,7 +34,7 @@ class GifsRepositoryImpl @Inject constructor(
         pagingSourceFactory = { gifDataSource.getGifs() }
     ).flow.map { it.map { data -> data.toDomainGif() } }
 
-    override suspend fun getGifDetail(id: String) = withContext(Dispatchers.IO) {
+    override suspend fun getGifDetail(id: String) = withContext(coroutineContext) {
         flow<GetResult<GifDetail>> {
             val gif = gifDataSource.getGifDetail(id).toDomainGifDetail()
             emit(GetResult.Success(gif))

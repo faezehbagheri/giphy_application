@@ -8,7 +8,6 @@ import com.example.domain.model.GifDetail
 import com.example.libraries.common.exception.GifNotFountException
 import com.example.libraries.common.result.GetResult
 import com.example.libraries.test.BaseRobot
-import com.example.libraries.test.dsl.AND
 import com.example.libraries.test.dsl.GIVEN
 import com.example.libraries.test.dsl.RUN_UNIT_TEST
 import com.example.libraries.test.dsl.THEN
@@ -17,7 +16,6 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -26,21 +24,19 @@ class GifRepositoryTest {
     private val robot = Robot()
 
     @Test
-    fun test_successful_getGifDetail() = runTest {
+    fun test_successful_getGifDetail() {
         RUN_UNIT_TEST(robot) {
             GIVEN { mockSuccessfulGetGifDetail() }
-            WHEN { createGifsRepository() }
-            AND { callingGetGifDetail() }
+            WHEN { callingGetGifDetail() }
             THEN { checkGifDetailSuccessfulResult() }
         }
     }
 
     @Test
-    fun test_failure_getGifDetail() = runTest {
+    fun test_failure_getGifDetail() {
         RUN_UNIT_TEST(robot) {
             GIVEN { mockFailureGetGifDetail() }
-            WHEN { createGifsRepository() }
-            AND { callingGetGifDetail() }
+            WHEN { callingGetGifDetail() }
             THEN { checkGifDetailFailureResult() }
         }
     }
@@ -69,19 +65,16 @@ class GifRepositoryTest {
         private lateinit var gifDetail: GifDetail
         private var exception: Throwable? = null
 
-        fun mockSuccessfulGetGifDetail() = runTest {
+        fun mockSuccessfulGetGifDetail() {
             coEvery { gifDataSource.getGifDetail(any()) } answers { gifEntity }
         }
 
-        fun mockFailureGetGifDetail() = runTest {
+        fun mockFailureGetGifDetail() {
             coEvery { gifDataSource.getGifDetail(any()) } throws GifNotFountException
         }
 
-        fun createGifsRepository() = runTest {
-            gifsRepository = GifsRepositoryImpl(gifDataSource, coroutineContext)
-        }
-
         fun callingGetGifDetail() = runTest {
+            gifsRepository = GifsRepositoryImpl(gifDataSource, coroutineContext)
             gifsRepository.getGifDetail("id").collect {
                 when (it) {
                     is GetResult.Success -> gifDetail = it.data
