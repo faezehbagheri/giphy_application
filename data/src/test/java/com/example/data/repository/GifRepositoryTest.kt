@@ -8,6 +8,7 @@ import com.example.domain.model.GifDetail
 import com.example.libraries.common.exception.GifNotFountException
 import com.example.libraries.common.result.GetResult
 import com.example.libraries.test.BaseRobot
+import com.example.libraries.test.dsl.AND
 import com.example.libraries.test.dsl.GIVEN
 import com.example.libraries.test.dsl.RUN_UNIT_TEST
 import com.example.libraries.test.dsl.THEN
@@ -16,6 +17,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -27,7 +29,8 @@ class GifRepositoryTest {
     fun test_successful_getGifDetail() = runTest {
         RUN_UNIT_TEST(robot) {
             GIVEN { mockSuccessfulGetGifDetail() }
-            WHEN { callingGetGifDetail() }
+            WHEN { createGifsRepository() }
+            AND { callingGetGifDetail() }
             THEN { checkGifDetailSuccessfulResult() }
         }
     }
@@ -36,7 +39,8 @@ class GifRepositoryTest {
     fun test_failure_getGifDetail() = runTest {
         RUN_UNIT_TEST(robot) {
             GIVEN { mockFailureGetGifDetail() }
-            WHEN { callingGetGifDetail() }
+            WHEN { createGifsRepository() }
+            AND { callingGetGifDetail() }
             THEN { checkGifDetailFailureResult() }
         }
     }
@@ -61,7 +65,7 @@ class GifRepositoryTest {
 
     class Robot : BaseRobot() {
         private val gifDataSource: GifDataSource = mockk()
-        private val gifsRepository = GifsRepositoryImpl(gifDataSource)
+        private lateinit var gifsRepository: GifsRepositoryImpl
         private lateinit var gifDetail: GifDetail
         private var exception: Throwable? = null
 
@@ -71,6 +75,10 @@ class GifRepositoryTest {
 
         fun mockFailureGetGifDetail() = runTest {
             coEvery { gifDataSource.getGifDetail(any()) } throws GifNotFountException
+        }
+
+        fun createGifsRepository() = runTest {
+            gifsRepository = GifsRepositoryImpl(gifDataSource, coroutineContext)
         }
 
         fun callingGetGifDetail() = runTest {

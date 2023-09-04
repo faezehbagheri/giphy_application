@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
@@ -24,6 +25,7 @@ const val LIMIT = 30
 
 class GifsRepositoryImpl @Inject constructor(
     private val gifDataSource: GifDataSource,
+    private val coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : GifsRepository {
     override fun getTrendingGifs(): Flow<PagingData<Gif>> = Pager(
         config = PagingConfig(
@@ -33,11 +35,13 @@ class GifsRepositoryImpl @Inject constructor(
         pagingSourceFactory = { gifDataSource.getGifs() }
     ).flow.map { it.map { data -> data.toDomainGif() } }
 
-    override fun getGifDetail(id: String) = flow<GetResult<GifDetail>> {
-        val gif = gifDataSource.getGifDetail(id).toDomainGifDetail()
-        emit(GetResult.Success(gif))
-    }.catch {
-        emit(GetResult.Error(it))
-    }.flowOn(Dispatchers.IO)
+    override suspend fun getGifDetail(id: String) = withContext(Dispatchers.IO) {
+        flow<GetResult<GifDetail>> {
+            val gif = gifDataSource.getGifDetail(id).toDomainGifDetail()
+            emit(GetResult.Success(gif))
+        }.catch {
+            emit(GetResult.Error(it))
+        }
+    }
 
 }
