@@ -12,9 +12,9 @@ import com.example.libraries.test.dsl.RUN_UNIT_TEST
 import com.example.libraries.test.dsl.THEN
 import com.example.libraries.test.dsl.WHEN
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -28,8 +28,8 @@ class GifDetailViewModelTest {
     private val robot = Robot()
 
     @Test
-    fun test_getGifDetail(){
-        RUN_UNIT_TEST(robot){
+    fun test_getGifDetail() {
+        RUN_UNIT_TEST(robot) {
             GIVEN { mockGetGifDetailUseCase() }
             WHEN { createViewModel() }
             THEN { checkGetGifDetailIsCalled() }
@@ -37,8 +37,8 @@ class GifDetailViewModelTest {
     }
 
     @Test
-    fun test_retry(){
-        RUN_UNIT_TEST(robot){
+    fun test_retry() {
+        RUN_UNIT_TEST(robot) {
             GIVEN { mockGetGifDetailUseCase() }
             WHEN { createViewModel() }
             AND { retry() }
@@ -68,7 +68,7 @@ class GifDetailViewModelTest {
         }
 
         fun checkGetGifDetailIsCalled(times: Int = 1) {
-            verify(exactly = times) { getGifDetailUseCase(any()) }
+            coVerify(exactly = times) { getGifDetailUseCase(any()) }
         }
     }
 

@@ -11,7 +11,6 @@ import com.example.domain.model.Gif
 import com.example.domain.model.GifDetail
 import com.example.domain.repository.GifsRepository
 import com.example.libraries.common.result.GetResult
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -19,13 +18,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 const val LIMIT = 30
 
 class GifsRepositoryImpl @Inject constructor(
     private val gifDataSource: GifDataSource,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : GifsRepository {
     override fun getTrendingGifs(): Flow<PagingData<Gif>> = Pager(
         config = PagingConfig(
@@ -40,6 +37,6 @@ class GifsRepositoryImpl @Inject constructor(
         emit(GetResult.Success(gif))
     }.catch {
         emit(GetResult.Error(it))
-    }.flowOn(coroutineDispatcher)
+    }.flowOn(Dispatchers.IO)
 
 }
