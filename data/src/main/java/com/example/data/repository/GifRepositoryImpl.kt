@@ -32,6 +32,14 @@ class GifsRepositoryImpl @Inject constructor(
         pagingSourceFactory = { gifDataSource.getGifs() }
     ).flow.map { it.map { data -> data.toDomainGif() } }
 
+    override fun searchOnGifs(searchTerms: String): Flow<PagingData<Gif>> = Pager(
+        config = PagingConfig(
+            pageSize = LIMIT,
+            initialLoadSize = LIMIT
+        ),
+        pagingSourceFactory = { gifDataSource.searchOnGifs(searchTerms) }
+    ).flow.map { it.map { data -> data.toDomainGif() } }
+
     override suspend fun getGifDetail(id: String) = flow<GetResult<GifDetail>> {
         val gif = gifDataSource.getGifDetail(id).toDomainGifDetail()
         emit(GetResult.Success(gif))

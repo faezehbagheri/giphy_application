@@ -2,29 +2,37 @@ package com.example.features.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.model.Gif
+import com.example.features.search.components.SearchBar
 import com.example.features.search.contract.GifsListActions
 import com.example.features.search.contract.GifsListViewState
+import com.example.libraries.designsystem.composable.EmptyStateView
 import com.example.libraries.designsystem.composable.ErrorStateView
 import com.example.libraries.designsystem.composable.LoadingStateView
-import com.example.libraries.designsystem.composable.TopBar
 
 @Composable
 fun GifsListScreen(
@@ -45,7 +53,8 @@ private fun GifsListScreenLoader(
 
     val viewState by viewModel.uiState.collectAsState()
     val actions = GifsListActions(
-        navigateToDetails = onNavigateToGifsDetails
+        navigateToDetails = onNavigateToGifsDetails,
+        onSearch = viewModel::search
     )
 
     GifsListScaffold(viewState, actions)
@@ -56,14 +65,14 @@ internal fun GifsListScaffold(
     viewState: GifsListViewState,
     actions: GifsListActions
 ) {
-    Scaffold(
-        topBar = { TopBar(withBackButton = false) },
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         val lazyPagingItems = viewState.pagingData?.collectAsLazyPagingItems()
         MainContent(
             modifier = Modifier.padding(innerPadding),
+            state = viewState,
             lazyPagingItems = lazyPagingItems,
-            onNavigateToGifsDetails = actions.navigateToDetails
+            onNavigateToGifsDetails = actions.navigateToDetails,
+            onSearch = actions.onSearch
         )
     }
 }
@@ -71,29 +80,38 @@ internal fun GifsListScaffold(
 @Composable
 private fun MainContent(
     modifier: Modifier = Modifier,
+    state: GifsListViewState,
     lazyPagingItems: LazyPagingItems<Gif>?,
-    onNavigateToGifsDetails: (String) -> Unit
+    onNavigateToGifsDetails: (String) -> Unit,
+    onSearch: (String) -> Unit,
 ) {
     val refreshLoadState = lazyPagingItems?.loadState?.refresh
 
-    lazyPagingItems?.let {
-        when (refreshLoadState) {
-            is LoadState.Loading -> {
-                LoadingStateView()
-            }
+    Column(modifier = Modifier.fillMaxSize()) {
+        SearchBar(searchText = state.searchTerms, onSearch = onSearch)
+        lazyPagingItems?.let {
+            when  {
+                refreshLoadState is LoadState.Loading -> {
+                    LoadingStateView()
+                }
 
-            is LoadState.Error -> {
-                ErrorStateView(
-                    onRetry = { lazyPagingItems.retry() },
-                )
-            }
+                refreshLoadState is LoadState.Error -> {
+                    ErrorStateView(
+                        onRetry = { lazyPagingItems.retry() },
+                    )
+                }
 
-            else -> {
-                GifsList(
-                    modifier = modifier,
-                    lazyPagingItems = lazyPagingItems,
-                    onNavigateToGifsDetails = onNavigateToGifsDetails
-                )
+                lazyPagingItems.itemCount == 0 -> {
+                    EmptyStateView()
+                }
+
+                else -> {
+                    GifsList(
+                        modifier = modifier,
+                        lazyPagingItems = lazyPagingItems,
+                        onNavigateToGifsDetails = onNavigateToGifsDetails
+                    )
+                }
             }
         }
     }
@@ -108,6 +126,8 @@ private fun GifsList(
     LazyVerticalGrid(
         modifier = modifier.testTag("gifsList"),
         columns = GridCells.Fixed(2),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.grid_space)),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.grid_space))
     ) {
         items(count = lazyPagingItems.itemCount) { index ->
             val gif = lazyPagingItems[index]
@@ -128,6 +148,7 @@ private fun GifItem(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
             .aspectRatio(1f)
             .testTag(gif.id)
             .clickable {
