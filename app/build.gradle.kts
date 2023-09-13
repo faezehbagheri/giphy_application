@@ -51,14 +51,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":data"))
-    implementation(project(":domain"))
-    implementation(project(":features:search"))
-    implementation(project(":features:gifdetail"))
-    implementation(project(":libraries:designsystem"))
-    implementation(project(":libraries:navigation"))
-    implementation(project(":libraries:utils"))
-    implementation(project(":libraries:common"))
+    implementation(project(Modules.data))
+    implementation(project(Modules.domain))
+    implementation(project(Modules.Features.search))
+    implementation(project(Modules.Features.gifDetail))
+    implementation(project(Modules.Libraries.designSystem))
+    implementation(project(Modules.Libraries.navigation))
+    implementation(project(Modules.Libraries.utils))
+    implementation(project(Modules.Libraries.common))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.lifecycleRunTime)

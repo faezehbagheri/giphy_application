@@ -32,11 +32,11 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
-    implementation(project(":libraries:designsystem"))
-    implementation(project(":libraries:utils"))
-    implementation(project(":libraries:common"))
-    implementation(project(":libraries:test"))
+    implementation(project(Modules.domain))
+    implementation(project(Modules.Libraries.designSystem))
+    implementation(project(Modules.Libraries.utils))
+    implementation(project(Modules.Libraries.common))
+    implementation(project(Modules.Libraries.test))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.lifecycleRunTime)
