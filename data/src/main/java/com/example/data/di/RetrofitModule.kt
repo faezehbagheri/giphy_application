@@ -1,7 +1,7 @@
 package com.example.data.di
 
 import com.example.data.BuildConfig
-import com.example.data.remote.GifsService
+import com.example.data.remote.GifService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,24 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class RetrofitModule {
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient.Builder()
-            .connectTimeout(500L, TimeUnit.SECONDS)
-            .writeTimeout(500L, TimeUnit.SECONDS)
-            .readTimeout(500L, TimeUnit.SECONDS)
-            .apply {
-                if (BuildConfig.DEBUG) {
-                    addInterceptor(
-                        HttpLoggingInterceptor().apply {
-                            level = HttpLoggingInterceptor.Level.BODY
-                        }
-                    )
-                }
-            }
-            .build()
-    }
 
     @Singleton
     @Provides
@@ -49,7 +31,7 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideGifService(retrofit: Retrofit): GifsService {
-        return retrofit.create(GifsService::class.java)
+    fun provideGifService(retrofit: Retrofit): GifService {
+        return retrofit.create(GifService::class.java)
     }
 }

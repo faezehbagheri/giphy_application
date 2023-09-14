@@ -34,19 +34,16 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.2.0"
+        kotlinCompilerExtensionVersion = "1.5.1"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -56,8 +53,12 @@ android {
 dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
-    implementation(project(":libraries"))
-    implementation(project(":common"))
+    implementation(project(":features:search"))
+    implementation(project(":features:gifdetail"))
+    implementation(project(":libraries:designsystem"))
+    implementation(project(":libraries:navigation"))
+    implementation(project(":libraries:utils"))
+    implementation(project(":libraries:common"))
 
     implementation(Libs.AndroidX.core)
     implementation(Libs.AndroidX.lifecycleRunTime)
@@ -66,7 +67,7 @@ dependencies {
     implementation(Libs.AndroidX.Compose.toolingPreview)
     debugImplementation(Libs.AndroidX.Compose.tooling)
     implementation(Libs.AndroidX.Compose.material)
-    testImplementation(Libs.AndroidX.Test.junit)
+    testImplementation(Libs.Test.junit)
 
     ///Hilt
     implementation(Libs.Hilt.hilt)

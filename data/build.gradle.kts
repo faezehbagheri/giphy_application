@@ -11,12 +11,34 @@ plugins {
 android {
     namespace = "com.example.data"
     compileSdk = ConfigurationData.compileSdk
+    defaultConfig {
+        minSdk = ConfigurationData.minSdk
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
 
     defaultConfig {
         val projectProperties = readProperties(file("../local.properties"))
 
         buildConfigField("String", "API_KEY", projectProperties["MY_KEY"] as String)
         buildConfigField("String", "BASE_URL", projectProperties["BASE_URL"] as String)
+    }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 
@@ -28,12 +50,9 @@ fun readProperties(propertiesFile: File) = Properties().apply {
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":common"))
+    implementation(project(":libraries:common"))
 
     implementation(Libs.AndroidX.core)
-    testImplementation(Libs.AndroidX.Test.junit)
-    androidTestImplementation(Libs.AndroidX.Test.testJunit)
-    androidTestImplementation(Libs.AndroidX.Test.espresso)
     implementation(Libs.AndroidX.appcompat)
 
     ///Hilt
@@ -44,8 +63,8 @@ dependencies {
     ///Retrofit
     implementation(Libs.Retrofit.retrofit)
     implementation(Libs.Retrofit.converterGson)
-    implementation(Libs.Retrofit.okhttp)
-    implementation(Libs.Retrofit.interceptor)
+    implementation(Libs.Okhttp.okhttp)
+    implementation(Libs.Okhttp.interceptor)
 
     // Parcelize
     implementation(Libs.Parcelize.parcelize)
@@ -54,4 +73,13 @@ dependencies {
     implementation(Libs.Pagination.paging)
     implementation(Libs.Pagination.pagingCompose)
 
+    ///Test
+    testImplementation(Libs.Test.mockk)
+    testImplementation(Libs.Test.junit)
+    testImplementation(Libs.Test.coroutines)
+    testImplementation(Libs.Okhttp.mockWebServer)
+    testImplementation(Libs.Hilt.Test.hiltTest)
+    testImplementation(Libs.Test.robolectric)
+    kaptTest(Libs.Hilt.hiltCompiler)
+    testImplementation(project(":libraries:test"))
 }

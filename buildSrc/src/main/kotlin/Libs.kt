@@ -1,8 +1,7 @@
 object Libs {
-    const val androidApplication = "com.android.application:7.4.0"
-    const val androidLibrary = "com.android.library:7.4.0"
+    const val androidApplication = "com.android.application:8.0.1"
+    const val androidLibrary = "com.android.library:8.0.1"
     const val kotlinAndroid = "org.jetbrains.kotlin.android:1.7.0"
-    const val daggerHilt = "com.google.dagger.hilt.android:2.42"
 
     object AndroidX {
 
@@ -16,41 +15,62 @@ object Libs {
         }
 
         object Compose {
-            private const val version = "1.3.1"
-            private const val compose_ui_version = "1.3.2"
+            private const val compose_version = "1.5.0"
 
-            const val runtime = "androidx.compose.runtime:runtime:$version"
-            const val foundation = "androidx.compose.foundation:foundation:${version}"
+            const val runtime = "androidx.compose.runtime:runtime:$compose_version"
+            const val foundation = "androidx.compose.foundation:foundation:${compose_version}"
 
             const val material = "androidx.compose.material:material:1.2.0"
 
-            const val ui = "androidx.compose.ui:ui:${compose_ui_version}"
-            const val tooling = "androidx.compose.ui:ui-tooling:${compose_ui_version}"
+            const val ui = "androidx.compose.ui:ui:${compose_version}"
+            const val tooling = "androidx.compose.ui:ui-tooling:${compose_version}"
             const val toolingPreview =
-                "androidx.compose.ui:ui-tooling-preview:${compose_ui_version}"
-            const val uiTestJunit = "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
-            const val uiTestManifest = "androidx.compose.ui:ui-test-manifest:$compose_ui_version"
+                "androidx.compose.ui:ui-tooling-preview:${compose_version}"
+
+            object Test {
+                const val composeUiTest = "androidx.compose.ui:ui-test-junit4:$compose_version"
+                const val composeTestManifest =
+                    "androidx.compose.ui:ui-test-manifest:$compose_version"
+            }
         }
 
         object Test {
-            const val junit = "junit:junit:4.13.2"
             const val testJunit = "androidx.test.ext:junit:1.1.5"
-            const val espresso = "androidx.test.espresso:espresso-core:3.5.1"
         }
     }
 
+    object Test {
+        const val junit = "junit:junit:4.13.2"
+        const val mockk = "io.mockk:mockk:1.13.5"
+        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
+        const val robolectric = "org.robolectric:robolectric:4.10.3"
+    }
+
     object Hilt {
-        private const val version = "2.42"
+        private const val version = "2.47"
         const val hilt = "com.google.dagger:hilt-android:$version"
         const val hiltCompiler = "com.google.dagger:hilt-compiler:$version"
-        const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.0.0"
+        const val hiltNavigationCompose = "androidx.hilt:hilt-navigation-compose:1.1.0-alpha01"
+
+        object Test {
+            const val hiltTest = "com.google.dagger:hilt-android-testing:$version"
+        }
+    }
+
+    object JavaX {
+        const val inject = "javax.inject:javax.inject:1"
     }
 
     object Retrofit {
         const val retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
         const val converterGson = "com.squareup.retrofit2:converter-gson:2.9.0"
-        const val okhttp = "com.squareup.okhttp3:okhttp:4.9.3"
-        const val interceptor = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6"
+    }
+
+    object Okhttp {
+        private const val version = "4.11.0"
+        const val okhttp = "com.squareup.okhttp3:okhttp:$version"
+        const val interceptor = "com.squareup.okhttp3:logging-interceptor:$version"
+        const val mockWebServer = "com.squareup.okhttp3:mockwebserver:$version"
     }
 
     object Gson {
@@ -75,10 +95,10 @@ object Libs {
         const val coilGif = "io.coil-kt:coil-gif:2.2.2"
     }
 
-
     object Pagination {
         private const val version = "3.1.1"
+        const val pagingCommon = "androidx.paging:paging-common:$version"
         const val paging = "androidx.paging:paging-runtime:$version"
-        const val pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha17"
+        const val pagingCompose = "androidx.paging:paging-compose:3.2.0"
     }
 }
