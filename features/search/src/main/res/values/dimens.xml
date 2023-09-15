@@ -2,8 +2,14 @@
 <resources>
     <dimen name="spacer_height_normal">16dp</dimen>
     <dimen name="spacer_height_small">8dp</dimen>
+
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="margin10">10dp</dimen>
     <dimen name="margin_small">8dp</dimen>
+
+
+    <dimen name="radius_normal">16dp</dimen>
+    <dimen name="radius_small">8dp</dimen>
+
     <dimen name="grid_space">8dp</dimen>
 </resources>

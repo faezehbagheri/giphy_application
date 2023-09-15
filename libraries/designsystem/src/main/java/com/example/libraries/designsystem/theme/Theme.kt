@@ -5,12 +5,12 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-private val LightColorPalette = lightColors(
+private val DarkColorPalette = lightColors(
     primary = Color.Black,
     primaryVariant = Color.Black,
     secondary = Color.White,
     background = Color.Black,
-    surface = Color.Black,
+    surface = Surface,
 
     /* Other default colors to override
     background = Color.White,
@@ -27,7 +27,7 @@ fun GiphyApplicationTheme(
     content: @Composable () -> Unit
 ) {
     val colors =
-        LightColorPalette
+        DarkColorPalette
 
     MaterialTheme(
         colors = colors,

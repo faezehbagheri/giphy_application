@@ -1,32 +1,40 @@
 package com.example.features.search.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.features.search.R
@@ -34,6 +42,7 @@ import com.example.features.search.R
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.searchBar(
     searchText: String,
+    requestFocus: Boolean = false,
     onSearch: (String) -> Unit,
 ) {
     stickyHeader {
@@ -42,79 +51,58 @@ fun LazyListScope.searchBar(
                 .background(colorResource(id = R.color.background))
                 .padding(
                     vertical = dimensionResource(id = R.dimen.margin_normal),
+                    horizontal = dimensionResource(id = R.dimen.margin_small),
                 )
         ) {
-            Row(
-                modifier = Modifier
-                    .padding(
-                        horizontal = dimensionResource(id = R.dimen.margin_small),
-                    )
-                    .height(44.dp)
-                    .fillMaxWidth()
-                    .background(Color.White, shape = RoundedCornerShape(8.dp)),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                val interactionSource = remember { MutableInteractionSource() }
+            val focusManager = LocalFocusManager.current
+            val focusRequester = remember { FocusRequester() }
 
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                ) {
-                    BasicTextField(
-                        value = searchText,
-                        onValueChange = { newText: String ->
-                            onSearch(newText)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(44.dp)
-                            .padding(dimensionResource(id = R.dimen.margin10)),
-                        textStyle = MaterialTheme.typography.body1.copy(
-                            color = Color.Black,
-                        ),
-                        cursorBrush = Brush.verticalGradient(
-                            0f to MaterialTheme.colors.primary,
-                            1f to MaterialTheme.colors.primary
-                        ),
-                        singleLine = true,
-                        interactionSource = interactionSource,
-                    )
-                    if (searchText.isEmpty()) {
-                        Text(
-                            text = "Search all the GIFs",
-                            style = MaterialTheme.typography.body1.copy(
-                                color = Color.LightGray,
-                            ),
-                            modifier = Modifier
-                                .padding(dimensionResource(id = R.dimen.margin10))
-                        )
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .height(44.dp)
-                        .width(50.dp)
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    colorResource(id = R.color.pink),
-                                    colorResource(id = R.color.purple),
-                                    colorResource(id = R.color.violet),
-                                ),
-                                start = Offset(Float.POSITIVE_INFINITY, 0f),
-                                end = Offset(0f, Float.POSITIVE_INFINITY)
-                            ),
-                            shape = RoundedCornerShape(8.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = null,
-                        tint = Color.White,
-                    )
+            if (requestFocus) {
+                LaunchedEffect(requestFocus) {
+                    focusRequester.requestFocus()
                 }
             }
+
+            var isFocused by remember { mutableStateOf(false) }
+            TextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(54.dp)
+                    .background(
+                        color = MaterialTheme.colors.surface,
+                        shape = RoundedCornerShape(dimensionResource(id = R.dimen.radius_normal))
+                    )
+                    .padding(horizontal = 8.dp)
+                    .focusRequester(focusRequester)
+                    .onFocusChanged { isFocused = it.isFocused },
+                value = searchText,
+                onValueChange = {
+                    if (!it.contains("\n")) {
+                        onSearch(it)
+                    }
+                },
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    cursorColor = MaterialTheme.colors.onBackground,
+                ),
+                singleLine = true,
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.size(26.dp),
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = "searchIcon",
+                        tint = Color.Gray
+                    )
+                },
+                placeholder = {
+                    AnimatedVisibility(visible = isFocused.not()) {
+                        Text(text = stringResource(R.string.searchBarHint), color = Color.LightGray)
+                    }
+                }
+            )
         }
     }
 }

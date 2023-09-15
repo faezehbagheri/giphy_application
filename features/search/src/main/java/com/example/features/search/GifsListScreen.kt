@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -65,7 +66,7 @@ internal fun GifsListScaffold(
     viewState: GifsListViewState,
     actions: GifsListActions
 ) {
-    Scaffold { innerPadding ->
+    Scaffold(backgroundColor = MaterialTheme.colors.background) { innerPadding ->
         val lazyPagingItems = viewState.pagingData?.collectAsLazyPagingItems()
         MainContent(
             modifier = Modifier.padding(innerPadding),
