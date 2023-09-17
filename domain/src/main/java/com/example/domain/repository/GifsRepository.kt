@@ -8,5 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GifsRepository {
     fun getTrendingGifs(): Flow<PagingData<Gif>>
+    fun searchOnGifs(searchTerms: String): Flow<PagingData<Gif>>
     suspend fun getGifDetail(id: String): Flow<GetResult<GifDetail>>
 }
