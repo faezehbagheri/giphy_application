@@ -72,7 +72,7 @@ fun SearchBar(
             backgroundColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            cursorColor = MaterialTheme.colors.onBackground,
+            cursorColor = Color.White,
         ),
         singleLine = true,
         leadingIcon = {
@@ -84,14 +84,15 @@ fun SearchBar(
             )
         },
         trailingIcon = {
-            Icon(
-                modifier = Modifier
-                    .size(26.dp)
-                    .clickable { onSearch("") },
-                imageVector = Icons.Rounded.Close,
-                contentDescription = "searchIcon",
-                tint = Color.White
-            )
+            if (searchText.isNotBlank())
+                Icon(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .clickable { onSearch("") },
+                    imageVector = Icons.Rounded.Close,
+                    contentDescription = "searchIcon",
+                    tint = Color.White
+                )
         },
         placeholder = {
             AnimatedVisibility(visible = isFocused.not()) {
