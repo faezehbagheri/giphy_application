@@ -1,5 +1,5 @@
 <resources>
     <string name="no_data">There is no data to display</string>
     <string name="retry">Try again</string>
-    <string name="searchBarHint">Search all the GIFs</string>
+    <string name="searchBarHint">Search</string>
 </resources>

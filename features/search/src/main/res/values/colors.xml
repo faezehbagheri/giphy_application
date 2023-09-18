@@ -13,4 +13,6 @@
 
     <color name="text_color">#FFFFFFFF</color>
     <color name="text_secondary_color">#9B9B9B</color>
+
+    <color name="divider_color">#161B21</color>
 </resources>

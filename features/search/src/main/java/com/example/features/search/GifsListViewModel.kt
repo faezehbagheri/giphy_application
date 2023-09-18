@@ -47,6 +47,7 @@ class GifsListViewModel @Inject constructor(
     private fun getTrendingGifs() {
         viewModelState.update { state ->
             state.copy(
+                searchTerms = "",
                 pagingData = getTrendingGifsUseCase().cachedIn(viewModelScope)
             )
         }
