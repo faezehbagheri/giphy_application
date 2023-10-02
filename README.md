@@ -1,5 +1,7 @@
 # Giphy Application
 
+Introducing our new app, Trending GIFs! With Trending GIFs, you can easily browse through a list of the latest and most popular GIFs. Our app is designed to provide you with a seamless and enjoyable experience, allowing you to easily search for GIFs that match your interests.
+
 Requirements
 ----
 - Use the GIFs API documented here:
@@ -20,7 +22,7 @@ Requirements
   * [Coil](https://coil-kt.github.io/coil/)
     
 * Architecture
-  * This project is based on the [Clean Architecture]
+  * This project is based on the Clean Architecture
 * Pattern 
   * MVI - Model View Intent
 
@@ -36,8 +38,8 @@ I added some screenshots as shown:
 
 Search page | 
 --- |
-<img src="https://i.imgur.com/I22bgGj.jpg" width="280"/> |
+<img src="https://imgur.com/YPG2nrz.jpg" width="280"/> |
 
 Detail page | 
 --- |
-<img src="https://i.imgur.com/3Fjnljv.jpg" width="280"/> |
+<img src="https://imgur.com/zJ5wg0L.jpg" width="280"/> |
